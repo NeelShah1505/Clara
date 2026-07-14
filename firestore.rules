@@ -1,0 +1,80 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ════════════════════════════════════════════════════════════════════════
+    // USER PROFILE (top-level user document)
+    // ════════════════════════════════════════════════════════════════════════
+    match /users/{userId} {
+      allow read, write: if isOwner(userId) && isEmailVerified();
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
+    // USER SUB-COLLECTIONS
+    // Covers: wallets, transactions, recurringRules, subscriptions,
+    //         categories, budgets, goals, and any future sub-collections.
+    // Every document in a user's subtree requires ownership + email verified.
+    // ════════════════════════════════════════════════════════════════════════
+    match /users/{userId}/{collection}/{docId} {
+      allow read, write: if isOwner(userId) && isEmailVerified();
+    }
+
+    // Wildcard covers deeply-nested subcollections (e.g. split-expense threads)
+    match /users/{userId}/{document=**} {
+      allow read, write: if isOwner(userId) && isEmailVerified();
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
+    // ADMIN COLLECTION
+    // Only callable with a Firebase custom claim { admin: true }.
+    // Claims are set exclusively via a trusted Cloud Function / backend script
+    // (never via client SDK) — see functions/src/auth/setAdminClaim.ts.
+    // ════════════════════════════════════════════════════════════════════════
+    match /admin/{document=**} {
+      allow read, write: if isAdmin();
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
+    // ADMIN AUDIT LOG
+    // Immutable append-only log (security.md §6).
+    // Even admins cannot update or delete entries — only create and read.
+    // ════════════════════════════════════════════════════════════════════════
+    match /adminAuditLog/{logId} {
+      allow create: if isAdmin();
+      allow read:   if isAdmin();
+      allow update, delete: if false; // IMMUTABLE — intentional
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
+    // FEEDBACK
+    // Any verified, authenticated user may submit feedback.
+    // Only admins can read, update, or delete feedback entries.
+    // ════════════════════════════════════════════════════════════════════════
+    match /feedback/{feedbackId} {
+      allow create: if request.auth != null && isEmailVerified();
+      allow read, update, delete: if isAdmin();
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
+    // HELPER FUNCTIONS
+    // ════════════════════════════════════════════════════════════════════════
+
+    /// True when the requesting user is the owner of the document path.
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    /// True when the requesting user's email is verified.
+    /// This is enforced in ADDITION to isOwner() for all financial data,
+    /// providing defence-in-depth against unverified-email writes.
+    function isEmailVerified() {
+      return request.auth.token.email_verified == true;
+    }
+
+    /// True when the requesting user has the admin custom claim.
+    /// Claims are set only via trusted backend code — never the client SDK.
+    function isAdmin() {
+      return request.auth != null && request.auth.token.admin == true;
+    }
+  }
+}

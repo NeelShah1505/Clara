@@ -1,0 +1,294 @@
+<!DOCTYPE html><html lang="en" class="scroll-smooth" style=""><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#93000a",
+                        "on-secondary": "#ffffff",
+                        "surface-variant": "#e4e2e1",
+                        "on-secondary-container": "#66645d",
+                        "on-error": "#ffffff",
+                        "outline": "#747878",
+                        "on-tertiary-fixed": "#2e131e",
+                        "surface-container-highest": "#e4e2e1",
+                        "primary-fixed": "#e5e2e1",
+                        "on-primary-container": "#858383",
+                        "surface-tint": "#5f5e5e",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#a17987",
+                        "secondary-fixed": "#e6e2d8",
+                        "on-surface-variant": "#444748",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#1c1b1b",
+                        "primary-container": "#1c1b1b",
+                        "inverse-surface": "#303030",
+                        "on-surface": "#1b1c1c",
+                        "tertiary-fixed": "#ffd9e5",
+                        "tertiary-container": "#2e131e",
+                        "surface-container": "#f0eded",
+                        "inverse-on-surface": "#f3f0ef",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#474746",
+                        "outline-variant": "#c4c7c7",
+                        "primary-fixed-dim": "#c8c6c5",
+                        "primary": "#000000",
+                        "surface-container-high": "#eae7e7",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#5f3d4a",
+                        "secondary-container": "#e6e2d8",
+                        "secondary": "#605e57",
+                        "surface-bright": "#fcf9f8",
+                        "tertiary": "#000000",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#cac6bd",
+                        "on-secondary-fixed": "#1c1c16",
+                        "background": "#fcf9f8",
+                        "inverse-primary": "#c8c6c5",
+                        "on-secondary-fixed-variant": "#484740",
+                        "surface-dim": "#dcd9d9",
+                        "surface": "#fcf9f8",
+                        "on-background": "#1b1c1c",
+                        "surface-container-low": "#f6f3f2",
+                        "tertiary-fixed-dim": "#e8baca",
+                        // Brand Pastels from image/style guidance
+                        "brand-cream": "#F9F5EB",
+                        "brand-yellow": "#FDE68A",
+                        "brand-pink": "#FBCFE8",
+                        "brand-green": "#A7F3D0",
+                        "brand-blue": "#BFDBFE"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-padding": "2rem",
+                        "stack-gap-sm": "0.5rem",
+                        "gutter": "1.5rem",
+                        "card-padding": "1.5rem",
+                        "stack-gap-md": "1rem",
+                        "sidebar-width": "260px",
+                        "stack-gap-lg": "2rem"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter", "sans-serif"],
+                        "body-md": ["Inter", "sans-serif"],
+                        "display-lg": ["Inter", "sans-serif"],
+                        "headline-sm": ["Inter", "sans-serif"],
+                        "body-lg": ["Inter", "sans-serif"],
+                        "headline-md": ["Inter", "sans-serif"],
+                        "nav-item": ["Inter", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "1.6", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "display-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+                        "headline-sm": ["20px", { "lineHeight": "1.4", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "500" }],
+                        "headline-md": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "nav-item": ["14px", { "lineHeight": "1", "letterSpacing": "0em", "fontWeight": "500" }]
+                    },
+                    "boxShadow": {
+                        "card": "0 8px 30px rgba(0,0,0,0.04)",
+                        "popover": "0 20px 50px rgba(0,0,0,0.1)"
+                    }
+                }
+            }
+        }
+    }catch(_e){}</script></head><body class="font-body-md text-on-surface antialiased min-h-screen flex flex-col">
+
+    <!-- Navigation -->
+    <header class="sticky top-0 z-50 bg-brand-cream/80 backdrop-blur-md border-b border-surface-variant/50">
+        <div class="max-w-[1440px] mx-auto px-6 md:px-12 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="font-display-lg text-2xl font-bold tracking-tight text-primary">Clara</span>
+            </div>
+            
+            <nav class="hidden md:flex items-center gap-8">
+                <a href="#features" class="font-nav-item text-nav-item text-on-surface-variant hover:text-primary transition-colors">Features</a>
+                <a href="#how-it-works" class="font-nav-item text-nav-item text-on-surface-variant hover:text-primary transition-colors">Platform</a>
+                <a href="#pricing" class="font-nav-item text-nav-item text-on-surface-variant hover:text-primary transition-colors">Pricing</a>
+                <a href="#" class="font-nav-item text-nav-item text-on-surface-variant hover:text-primary transition-colors">Docs</a>
+            </nav>
+
+            <div class="flex items-center gap-4">
+                <a href="#" class="hidden md:block font-nav-item text-nav-item text-on-surface hover:opacity-70 transition-opacity">Log in</a>
+                <a href="#" class="bg-primary text-on-primary px-6 py-3 rounded-xl font-nav-item text-nav-item hover:opacity-90 transition-all hover:scale-[0.98]">Get Started</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- Hero Section -->
+        <section class="relative pt-32 pb-24 overflow-hidden">
+            <div class="absolute inset-0 bg-grid-pattern opacity-50 z-0 pointer-events-none"></div>
+            
+            <div class="max-w-[1440px] mx-auto px-6 md:px-12 relative z-10">
+                <div class="max-w-4xl mx-auto text-center flex flex-col items-center">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-container-high border border-outline-variant/30 mb-8">
+                        <span class="w-2 h-2 rounded-full bg-brand-pink animate-pulse"></span>
+                        <span class="font-label-caps text-label-caps text-on-surface-variant">Clara 2.0 is live</span>
+                    </div>
+                    
+                    <h1 class="font-display-lg text-display-lg mb-6 leading-tight">
+                        Track Wealth with <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-surface-tint">Intelligence.</span>
+                    </h1>
+                    
+                    <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mb-10 text-lg">
+                        The sophisticated architect for your personal finances. Experience an organized, calm, and intellectually rigorous approach to modern wealth management.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                        <a href="#" class="bg-primary text-on-primary px-8 py-4 rounded-xl font-body-lg text-body-lg flex items-center justify-center gap-2 hover:opacity-90 transition-all hover:-translate-y-1 shadow-lg shadow-primary/20">
+                            Start Building
+                            <span class="material-symbols-outlined text-xl">arrow_forward</span>
+                        </a>
+                        <a href="#" class="bg-transparent border border-outline/20 text-on-surface px-8 py-4 rounded-xl font-body-lg text-body-lg flex items-center justify-center gap-2 hover:bg-surface-container-high transition-colors">
+                            <span class="material-symbols-outlined text-xl">play_circle</span>
+                            View Demo
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Abstract App Preview -->
+                <div class="mt-24 relative max-w-5xl mx-auto">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-brand-pink via-brand-yellow to-brand-green rounded-[2rem] blur-xl opacity-30"></div>
+                    <div class="relative bg-white rounded-2xl p-4 shadow-popover border border-outline-variant/20 overflow-hidden">
+                        <div class="flex gap-4">
+                            <!-- Faux Sidebar -->
+                            <div class="w-48 bg-primary rounded-xl p-4 hidden md:flex flex-col gap-4">
+                                <div class="h-6 w-20 bg-on-primary/20 rounded mb-4"></div>
+                                <div class="h-4 w-full bg-on-primary/10 rounded"></div>
+                                <div class="h-4 w-3/4 bg-on-primary/10 rounded"></div>
+                                <div class="h-4 w-5/6 bg-on-primary/10 rounded"></div>
+                            </div>
+                            <!-- Faux Canvas -->
+                            <div class="flex-1 bg-brand-cream rounded-xl p-6 grid grid-cols-2 gap-4">
+                                <div class="col-span-2 h-12 flex justify-between items-center mb-4">
+                                    <div class="h-6 w-48 bg-surface-variant rounded"></div>
+                                    <div class="flex gap-2">
+                                        <div class="w-8 h-8 rounded-full bg-surface-variant"></div>
+                                        <div class="w-8 h-8 rounded-full bg-surface-variant"></div>
+                                    </div>
+                                </div>
+                                <div class="bg-brand-yellow rounded-2xl p-4 h-32 flex flex-col justify-between">
+                                    <div class="h-4 w-24 bg-primary/20 rounded"></div>
+                                    <div class="flex gap-2 items-end h-16">
+                                        <div class="w-1/4 h-3/4 bg-primary/40 rounded-t"></div>
+                                        <div class="w-1/4 h-1/2 bg-primary/40 rounded-t"></div>
+                                        <div class="w-1/4 h-full bg-primary/40 rounded-t"></div>
+                                        <div class="w-1/4 h-1/4 bg-primary/40 rounded-t"></div>
+                                    </div>
+                                </div>
+                                <div class="bg-brand-pink rounded-2xl p-4 h-32 flex flex-col justify-between">
+                                    <div class="h-4 w-32 bg-primary/20 rounded"></div>
+                                    <!-- Faux Line Chart -->
+                                    <svg viewBox="0 0 100 40" class="w-full h-16 stroke-primary stroke-[2] fill-none stroke-linecap-round stroke-linejoin-round">
+                                        <path d="M0,30 Q10,20 20,25 T40,15 T60,20 T80,5 T100,10"></path>
+                                        <circle cx="80" cy="5" r="2" class="fill-primary"></circle>
+                                    </svg>
+                                </div>
+                                <div class="col-span-2 bg-white rounded-2xl p-4 h-24 border border-outline-variant/10 flex items-center gap-4">
+                                    <div class="w-12 h-12 rounded-xl bg-brand-green/50 flex-shrink-0"></div>
+                                    <div class="flex-1">
+                                        <div class="h-4 w-32 bg-surface-variant rounded mb-2"></div>
+                                        <div class="h-3 w-48 bg-surface-variant/50 rounded"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="py-24 bg-white">
+            <div class="max-w-[1440px] mx-auto px-6 md:px-12">
+                <div class="text-center mb-16 max-w-2xl mx-auto">
+                    <h2 class="font-headline-md text-headline-md mb-4">Tactile insights, effortless control.</h2>
+                    <p class="font-body-lg text-body-lg text-on-surface-variant">We replaced harsh financial tropes with a nuanced, editorial language designed for long data-analysis sessions.</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- Feature 1 -->
+                    <div class="bg-brand-cream rounded-2xl p-8 border border-outline-variant/20 shadow-card hover:-translate-y-1 transition-transform duration-300">
+                        <div class="w-12 h-12 rounded-xl bg-brand-pink flex items-center justify-center mb-6">
+                            <span class="material-symbols-outlined text-primary">category</span>
+                        </div>
+                        <h3 class="font-headline-sm text-headline-sm mb-3">Smart Categorization</h3>
+                        <p class="font-body-md text-body-md text-on-surface-variant">Automatically sort transactions into logical buckets using our sophisticated machine learning models.</p>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="bg-brand-cream rounded-2xl p-8 border border-outline-variant/20 shadow-card hover:-translate-y-1 transition-transform duration-300">
+                        <div class="w-12 h-12 rounded-xl bg-brand-green flex items-center justify-center mb-6">
+                            <span class="material-symbols-outlined text-primary">monitoring</span>
+                        </div>
+                        <h3 class="font-headline-sm text-headline-sm mb-3">Real-time Analytics</h3>
+                        <p class="font-body-md text-body-md text-on-surface-variant">Watch your wealth grow with instant updates and aesthetically pleasing data visualizations.</p>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="bg-brand-cream rounded-2xl p-8 border border-outline-variant/20 shadow-card hover:-translate-y-1 transition-transform duration-300">
+                        <div class="w-12 h-12 rounded-xl bg-brand-yellow flex items-center justify-center mb-6">
+                            <span class="material-symbols-outlined text-primary">security</span>
+                        </div>
+                        <h3 class="font-headline-sm text-headline-sm mb-3">Bank-grade Security</h3>
+                        <p class="font-body-md text-body-md text-on-surface-variant">Your data is encrypted and secure. We prioritize your privacy above all else.</p>
+                    </div>
+                </div>
+            </div>
+        </section><section class="py-24" id="how-it-works"><div class="max-w-[1440px] mx-auto px-6 md:px-12"><div class="text-center mb-16 max-w-2xl mx-auto"><h2 class="font-headline-md text-headline-md mb-4">Our Process</h2><p class="font-body-lg text-body-lg text-on-surface-variant">Three simple steps to mastering your financial architecture with Clara.</p></div><div class="grid md:grid-cols-3 gap-6"><div class="bg-brand-cream rounded-2xl p-8 border border-outline-variant/20 shadow-card hover:-translate-y-1 transition-transform duration-300"><div class="w-12 h-12 rounded-xl bg-brand-pink flex items-center justify-center mb-6"><span class="material-symbols-outlined text-primary">account_balance</span></div><h3 class="font-headline-sm text-headline-sm mb-3">1. Connect Accounts</h3><p class="font-body-md text-body-md text-on-surface-variant">Securely link your bank accounts and investment portfolios in seconds.</p></div><div class="bg-brand-cream rounded-2xl p-8 border border-outline-variant/20 shadow-card hover:-translate-y-1 transition-transform duration-300"><div class="w-12 h-12 rounded-xl bg-brand-green flex items-center justify-center mb-6"><span class="material-symbols-outlined text-primary">account_tree</span></div><h3 class="font-headline-sm text-headline-sm mb-3">2. Categorize Expenses</h3><p class="font-body-md text-body-md text-on-surface-variant">Our AI automatically organizes every transaction into meaningful categories.</p></div><div class="bg-brand-cream rounded-2xl p-8 border border-outline-variant/20 shadow-card hover:-translate-y-1 transition-transform duration-300"><div class="w-12 h-12 rounded-xl bg-brand-yellow flex items-center justify-center mb-6"><span class="material-symbols-outlined text-primary">insights</span></div><h3 class="font-headline-sm text-headline-sm mb-3">3. Analyze Wealth</h3><p class="font-body-md text-body-md text-on-surface-variant">Gain deep insights into your net worth and financial growth over time.</p></div></div></div></section>
+
+        <!-- Pricing Section -->
+        
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-surface-variant/50 py-12">
+        <div class="max-w-[1440px] mx-auto px-6 md:px-12 grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div class="col-span-2 md:col-span-1">
+                <span class="font-display-lg text-xl font-bold tracking-tight text-primary mb-4 block">Clara</span>
+                <p class="font-body-md text-on-surface-variant max-w-xs">The Sophisticated Architect for your personal wealth management.</p>
+            </div>
+            
+            <div>
+                <h4 class="font-label-caps text-label-caps mb-4 text-primary">Product</h4>
+                <ul class="space-y-3">
+                    <li class=""><a href="#" class="font-body-md text-on-surface-variant hover:text-primary transition-colors">Features</a></li>
+                    <li class=""><a href="#" class="font-body-md text-on-surface-variant hover:text-primary transition-colors">Integrations</a></li>
+                    <li class=""><a href="#" class="font-body-md text-on-surface-variant hover:text-primary transition-colors">Pricing</a></li>
+                    <li class=""><a href="#" class="font-body-md text-on-surface-variant hover:text-primary transition-colors">Changelog</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-label-caps text-label-caps mb-4 text-primary">Resources</h4>
+                <ul class="space-y-3">
+                    <li class=""><a href="#" class="font-body-md text-on-surface-variant hover:text-primary transition-colors">Documentation</a></li>
+                    <li class=""><a href="#" class="font-body-md text-on-surface-variant hover:text-primary transition-colors">Help Center</a></li>
+                    <li class=""><a href="#" class="font-body-md text-on-surface-variant hover:text-primary transition-colors">API Reference</a></li>
+                    <li class=""><a href="#" class="font-body-md text-on-surface-variant hover:text-primary transition-colors">Community</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-label-caps text-label-caps mb-4 text-primary">Legal</h4>
+                <ul class="space-y-3">
+                    <li class=""><a href="#" class="font-body-md text-on-surface-variant hover:text-primary transition-colors">Privacy Policy</a></li>
+                    <li class=""><a href="#" class="font-body-md text-on-surface-variant hover:text-primary transition-colors">Terms of Service</a></li>
+                    <li class=""><a href="#" class="font-body-md text-on-surface-variant hover:text-primary transition-colors">Security</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-[1440px] mx-auto px-6 md:px-12 mt-12 pt-8 border-t border-surface-variant/30 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="font-body-md text-on-surface-variant text-sm">© 2024 Clara Finance. All rights reserved.</p>
+            <div class="flex items-center gap-4">
+                <a href="#" class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">language</span></a>
+                </div></div></footer></body></html>

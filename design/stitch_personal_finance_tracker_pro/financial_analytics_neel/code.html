@@ -1,0 +1,402 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><svg class="inline-defs-container" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"></svg><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><script id="tailwind-config">try{
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#93000a",
+                        "on-secondary": "#ffffff",
+                        "surface-variant": "#e4e2e1",
+                        "on-secondary-container": "#66645d",
+                        "on-error": "#ffffff",
+                        "outline": "#747878",
+                        "on-tertiary-fixed": "#2e131e",
+                        "surface-container-highest": "#e4e2e1",
+                        "primary-fixed": "#e5e2e1",
+                        "on-primary-container": "#858383",
+                        "surface-tint": "#5f5e5e",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#a17987",
+                        "secondary-fixed": "#e6e2d8",
+                        "on-surface-variant": "#444748",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#1c1b1b",
+                        "primary-container": "#1c1b1b",
+                        "inverse-surface": "#303030",
+                        "on-surface": "#1b1c1c",
+                        "tertiary-fixed": "#ffd9e5",
+                        "tertiary-container": "#2e131e",
+                        "surface-container": "#f0eded",
+                        "inverse-on-surface": "#f3f0ef",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#474746",
+                        "outline-variant": "#c4c7c7",
+                        "primary-fixed-dim": "#c8c6c5",
+                        "primary": "#000000",
+                        "surface-container-high": "#eae7e7",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#5f3d4a",
+                        "secondary-container": "#e6e2d8",
+                        "secondary": "#605e57",
+                        "surface-bright": "#fcf9f8",
+                        "tertiary": "#000000",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#cac6bd",
+                        "on-secondary-fixed": "#1c1c16",
+                        "background": "#fcf9f8",
+                        "inverse-primary": "#c8c6c5",
+                        "on-secondary-fixed-variant": "#484740",
+                        "surface-dim": "#dcd9d9",
+                        "surface": "#fcf9f8",
+                        "on-background": "#1b1c1c",
+                        "surface-container-low": "#f6f3f2",
+                        "tertiary-fixed-dim": "#e8baca"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px",
+                        "card": "24px"
+                    },
+                    "spacing": {
+                        "container-padding": "2rem",
+                        "stack-gap-sm": "0.5rem",
+                        "gutter": "1.5rem",
+                        "card-padding": "1.5rem",
+                        "stack-gap-md": "1rem",
+                        "sidebar-width": "260px",
+                        "stack-gap-lg": "2rem"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter", "sans-serif"],
+                        "body-md": ["Inter", "sans-serif"],
+                        "display-lg": ["Inter", "sans-serif"],
+                        "headline-sm": ["Inter", "sans-serif"],
+                        "body-lg": ["Inter", "sans-serif"],
+                        "headline-md": ["Inter", "sans-serif"],
+                        "nav-item": ["Inter", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "1.6", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "display-lg": ["40px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "headline-sm": ["20px", { "lineHeight": "1.4", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "500" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "nav-item": ["14px", { "lineHeight": "1", "letterSpacing": "0em", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    }catch(_e){}</script><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script></head><body class="bg-background text-on-background font-body-md antialiased flex h-screen overflow-hidden">
+<!-- Shared Component: SideNavBar -->
+<nav class="hidden md:flex flex-col py-stack-gap-lg overflow-y-auto bg-primary dark:bg-primary fixed left-0 top-0 h-full w-[260px] z-20">
+<div class="px-8 mb-10 flex items-center gap-3">
+<span class="text-headline-md font-headline-md font-black text-on-primary">Clara</span>
+</div>
+<!-- Semantic Mapping: Intent -> "Analytics & Insights" maps to "Reports" -->
+<ul class="flex-1 flex flex-col gap-2">
+<li class="">
+<a class="text-on-primary opacity-50 flex items-center gap-stack-gap-md px-6 py-3 font-nav-item text-nav-item hover:bg-on-primary-fixed-variant hover:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined" data-original-icon="dashboard">circle</span>
+                    Dashboard
+                </a>
+</li>
+<li class="">
+<a class="text-on-primary opacity-50 flex items-center gap-stack-gap-md px-6 py-3 font-nav-item text-nav-item hover:bg-on-primary-fixed-variant hover:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined" data-original-icon="account_balance">circle</span>
+                    Accounts
+                </a>
+</li>
+<li class="">
+<a class="text-on-primary opacity-50 flex items-center gap-stack-gap-md px-6 py-3 font-nav-item text-nav-item hover:bg-on-primary-fixed-variant hover:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined" data-original-icon="receipt_long">circle</span>
+                    Transactions
+                </a>
+</li>
+<!-- Active Navigation -->
+<li class="relative">
+<a class="text-on-primary font-bold opacity-100 before:content-[''] before:absolute before:left-0 before:w-1 before:h-4 before:bg-tertiary-fixed before:rounded-full before:top-1/2 before:-translate-y-1/2 flex items-center gap-stack-gap-md px-6 py-3 font-nav-item text-nav-item hover:bg-on-primary-fixed-variant transition-all scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">analytics</span>
+                    Reports
+                </a>
+</li>
+<li class="">
+<a class="text-on-primary opacity-50 flex items-center gap-stack-gap-md px-6 py-3 font-nav-item text-nav-item hover:bg-on-primary-fixed-variant hover:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined" data-original-icon="payments">circle</span>
+                    Budgets
+                </a>
+</li>
+<li class="">
+<a class="text-on-primary opacity-50 flex items-center gap-stack-gap-md px-6 py-3 font-nav-item text-nav-item hover:bg-on-primary-fixed-variant hover:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined" data-original-icon="trending_up">circle</span>
+                    Investments
+                </a>
+</li>
+<li class="">
+<a class="text-on-primary opacity-50 flex items-center gap-stack-gap-md px-6 py-3 font-nav-item text-nav-item hover:bg-on-primary-fixed-variant hover:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined" data-original-icon="request_quote">circle</span>
+                    Bills
+                </a>
+</li>
+<li class="">
+<a class="text-on-primary opacity-50 flex items-center gap-stack-gap-md px-6 py-3 font-nav-item text-nav-item hover:bg-on-primary-fixed-variant hover:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined" data-original-icon="folder_open">circle</span>
+                    Documents
+                </a>
+</li>
+</ul>
+<div class="mt-auto flex flex-col gap-2">
+<a class="text-on-primary opacity-50 flex items-center gap-stack-gap-md px-6 py-3 font-nav-item text-nav-item hover:bg-on-primary-fixed-variant hover:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+                Settings
+            </a>
+<a class="text-on-primary opacity-50 flex items-center gap-stack-gap-md px-6 py-3 font-nav-item text-nav-item hover:bg-on-primary-fixed-variant hover:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined">logout</span>
+                Log out
+            </a>
+</div>
+</nav>
+<!-- Main Canvas -->
+<div class="flex-1 ml-0 md:ml-[260px] flex flex-col h-full overflow-hidden relative">
+<!-- Shared Component: TopAppBar -->
+<header class="bg-transparent text-on-surface dark:text-on-surface font-headline-sm text-headline-sm w-full pt-6 px-8 flex justify-between items-center max-w-[1440px] mx-auto z-10">
+<!-- Search on Left -->
+<div class="flex-1 flex items-center">
+<div class="relative w-full max-w-sm">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant opacity-50">search</span>
+<input class="w-full bg-surface-container-high border-none rounded-full py-2.5 pl-12 pr-4 text-body-md focus:ring-1 focus:ring-primary focus:bg-surface-container-lowest transition-colors placeholder-on-surface-variant/50" placeholder="Search..." type="text">
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="hidden lg:flex flex-1 justify-center gap-8">
+<a class="text-on-surface-variant font-medium text-body-md hover:text-primary transition-colors" href="#">Portfolio</a>
+<a class="text-primary border-b-2 border-primary pb-1 text-body-md scale-98 transition-transform font-semibold" href="#">Insights</a>
+<a class="text-on-surface-variant font-medium text-body-md hover:text-primary transition-colors" href="#">Planning</a>
+</nav>
+<!-- Trailing Icons -->
+<div class="flex-1 flex justify-end items-center gap-4">
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-on-surface" data-original-icon="notifications">circle</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-on-surface">person</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-on-surface">settings</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-surface-variant border border-outline-variant overflow-hidden ml-2">
+<img alt="User profile of Neel" class="w-full h-full object-cover" data-alt="Profile avatar for Neel showing initials or a minimalist portrait on a neutral background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYcOVtt1KgbOiQo99hYDkU9hZUPpqc7RaFqGP3pz5yR7HQzq6kDyVJ-tU6zU8VMoXfnQMHEKQotrPMdG0dkE-7HnDcPV-CVrv3-Gj0964vCpuQQMRg0ZFQVAMXM5YsPwf8cuSaqZVcRyl-HMC33CcS45rly52R6EKpC4tLKY7xFw5_d4Fm47BmKl2izndFLq-lI0TDJWsYqQjBCzaX7LHgqehIAWkxBBwK5gfbpt4-tiGqovM02s1O">
+</div>
+</div>
+</header>
+<!-- Scrollable Content Canvas -->
+<main class="flex-1 overflow-y-auto p-container-padding">
+<div class="max-w-[1440px] mx-auto w-full flex flex-col gap-gutter">
+<!-- Page Header -->
+<div class="flex justify-between items-end mb-4">
+<div>
+<h1 class="font-display-lg text-display-lg text-on-surface">Analytics &amp; Insights</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2 max-w-xl">A comprehensive view of your financial health, cash flow dynamics, and budget efficiency for the current period.</p>
+</div>
+<div class="hidden sm:flex gap-3">
+<button class="px-4 py-2 rounded-[12px] bg-transparent border border-outline-variant text-on-surface text-nav-item hover:bg-surface-container-high transition-colors">Export Report</button>
+<button class="px-4 py-2 rounded-[12px] bg-primary text-on-primary text-nav-item hover:opacity-90 transition-opacity">Custom Range</button>
+</div>
+</div>
+<!-- Main Grid -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Financial Health Score (Bento Style) -->
+<div class="col-span-12 lg:col-span-4 bg-surface-container-lowest rounded-card p-card-padding card-shadow flex flex-col relative overflow-hidden">
+<!-- Decorative background element to match pastel aesthetic -->
+<div class="absolute -right-8 -top-8 w-48 h-48 rounded-full bg-[var(--chart-green)] opacity-20 blur-3xl"></div>
+<div class="flex justify-between items-start mb-6 relative z-10">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Financial Health</h2>
+<button class="text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined" data-original-icon="more_horiz">circle</span></button>
+</div>
+<div class="flex-1 flex flex-col items-center justify-center relative z-10">
+<!-- Gauge Visualization -->
+<div class="relative w-48 h-48 flex items-center justify-center mb-4">
+<svg class="w-full h-full -rotate-90 transform" viewBox="0 0 100 100">
+<!-- Background ring -->
+<circle class="text-surface-container-high" cx="50" cy="50" fill="none" r="40" stroke="currentColor" stroke-width="8"></circle>
+<!-- Progress ring (82%) -->
+<circle class="transition-all duration-1000 ease-out" cx="50" cy="50" fill="none" r="40" stroke="var(--chart-green)" stroke-dasharray="251.2" stroke-dashoffset="45.2" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+<span class="font-display-lg text-display-lg text-on-surface tracking-tighter">82</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase mt-1">Excellent</span>
+</div>
+</div>
+</div>
+<div class="mt-auto grid grid-cols-2 gap-4 relative z-10 pt-4 border-t border-surface-container-high">
+<div>
+<span class="block font-label-caps text-label-caps text-on-surface-variant mb-1">SAVINGS RATE</span>
+<span class="font-body-lg text-body-lg text-on-surface">+14.2%</span>
+</div>
+<div>
+<span class="block font-label-caps text-label-caps text-on-surface-variant mb-1">DEBT TO INCOME</span>
+<span class="font-body-lg text-body-lg text-on-surface">18.5%</span>
+</div>
+</div>
+</div>
+<!-- Income vs Expense Bar Chart -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container-lowest rounded-card p-card-padding card-shadow flex flex-col">
+<div class="flex justify-between items-start mb-8">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Income vs Expense</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Year-to-date comparison</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-[var(--chart-yellow)]"></span>
+<span class="font-nav-item text-nav-item text-on-surface-variant">Income</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-[var(--chart-pink)]"></span>
+<span class="font-nav-item text-nav-item text-on-surface-variant">Expense</span>
+</div>
+</div>
+</div>
+<!-- Chart Area (Simulated Recharts Bar Chart) -->
+<div class="flex-1 w-full h-64 relative flex items-end justify-between px-4 pb-8">
+<!-- Grid lines -->
+<div class="absolute inset-0 flex flex-col justify-between pb-8 pointer-events-none">
+<div class="border-b border-surface-container border-dashed w-full h-0"></div>
+<div class="border-b border-surface-container border-dashed w-full h-0"></div>
+<div class="border-b border-surface-container border-dashed w-full h-0"></div>
+<div class="border-b border-surface-container border-dashed w-full h-0"></div>
+</div>
+<!-- Bar Groups -->
+<!-- Jan -->
+<div class="flex gap-2 items-end h-[85%] relative z-10 group">
+<div class="w-8 md:w-10 bg-[var(--chart-yellow)] rounded-t-[4px] h-full transition-all hover:opacity-80"></div>
+<div class="w-8 md:w-10 bg-[var(--chart-pink)] rounded-t-[4px] h-[60%] transition-all hover:opacity-80"></div>
+<span class="absolute -bottom-8 left-1/2 -translate-x-1/2 font-label-caps text-label-caps text-on-surface-variant">JAN</span>
+</div>
+<!-- Feb -->
+<div class="flex gap-2 items-end h-[70%] relative z-10 group">
+<div class="w-8 md:w-10 bg-[var(--chart-yellow)] rounded-t-[4px] h-full transition-all hover:opacity-80"></div>
+<div class="w-8 md:w-10 bg-[var(--chart-pink)] rounded-t-[4px] h-[80%] transition-all hover:opacity-80"></div>
+<span class="absolute -bottom-8 left-1/2 -translate-x-1/2 font-label-caps text-label-caps text-on-surface-variant">FEB</span>
+</div>
+<!-- Mar -->
+<div class="flex gap-2 items-end h-[95%] relative z-10 group">
+<div class="w-8 md:w-10 bg-[var(--chart-yellow)] rounded-t-[4px] h-full transition-all hover:opacity-80"></div>
+<div class="w-8 md:w-10 bg-[var(--chart-pink)] rounded-t-[4px] h-[50%] transition-all hover:opacity-80"></div>
+<span class="absolute -bottom-8 left-1/2 -translate-x-1/2 font-label-caps text-label-caps text-on-surface-variant">MAR</span>
+</div>
+<!-- Apr -->
+<div class="flex gap-2 items-end h-[60%] relative z-10 group">
+<div class="w-8 md:w-10 bg-[var(--chart-yellow)] rounded-t-[4px] h-full transition-all hover:opacity-80"></div>
+<div class="w-8 md:w-10 bg-[var(--chart-pink)] rounded-t-[4px] h-[90%] transition-all hover:opacity-80"></div>
+<span class="absolute -bottom-8 left-1/2 -translate-x-1/2 font-label-caps text-label-caps text-on-surface-variant">APR</span>
+</div>
+<!-- May -->
+<div class="flex gap-2 items-end h-[80%] relative z-10 group">
+<div class="w-8 md:w-10 bg-[var(--chart-yellow)] rounded-t-[4px] h-full transition-all hover:opacity-80"></div>
+<div class="w-8 md:w-10 bg-[var(--chart-pink)] rounded-t-[4px] h-[40%] transition-all hover:opacity-80"></div>
+<span class="absolute -bottom-8 left-1/2 -translate-x-1/2 font-label-caps text-label-caps text-on-surface-variant">MAY</span>
+</div>
+<!-- Jun -->
+<div class="flex gap-2 items-end h-[100%] relative z-10 group">
+<div class="w-8 md:w-10 bg-[var(--chart-yellow)] rounded-t-[4px] h-full transition-all hover:opacity-80"></div>
+<div class="w-8 md:w-10 bg-[var(--chart-pink)] rounded-t-[4px] h-[65%] transition-all hover:opacity-80"></div>
+<span class="absolute -bottom-8 left-1/2 -translate-x-1/2 font-label-caps text-label-caps text-on-surface-variant">JUN</span>
+</div>
+</div>
+</div>
+<!-- Cash Flow Area Chart -->
+<div class="col-span-12 lg:col-span-7 bg-[var(--chart-blue)] bg-opacity-20 rounded-card p-card-padding card-shadow flex flex-col relative overflow-hidden">
+<div class="flex justify-between items-start mb-6 relative z-10">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Cash Flow</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Rolling 30-day liquidity</p>
+</div>
+<div class="text-right">
+<span class="block font-headline-md text-headline-md text-on-surface">₹42,850.00</span>
+<span class="font-body-md text-body-md text-on-tertiary-container font-semibold">+5.4%</span>
+</div>
+</div>
+<!-- Area Chart SVG Simulation -->
+<div class="flex-1 w-full h-48 relative mt-auto z-10">
+<svg class="w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 100">
+<defs>
+<linearGradient id="areaGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#8ba9db" stop-opacity="0.4"></stop>
+<stop offset="100%" stop-color="#8ba9db" stop-opacity="0"></stop>
+</linearGradient>
+</defs>
+<!-- Area -->
+<path d="M0,80 Q10,60 20,70 T40,40 T60,50 T80,20 T100,10 L100,100 L0,100 Z" fill="url(#areaGradient)"></path>
+<!-- Line (2px stroke per guidance) -->
+<path d="M0,80 Q10,60 20,70 T40,40 T60,50 T80,20 T100,10" fill="none" stroke="#688cc9" stroke-width="2"></path>
+<!-- Data Point Marker -->
+<circle cx="80" cy="20" fill="#ffffff" r="3" stroke="#688cc9" stroke-width="2"></circle>
+<line opacity="0.5" stroke="#688cc9" stroke-dasharray="4" stroke-width="1" x1="80" x2="80" y1="20" y2="100"></line>
+</svg>
+</div>
+</div>
+<!-- Budget Utilization Rings -->
+<div class="col-span-12 lg:col-span-5 bg-surface-container-lowest rounded-card p-card-padding card-shadow flex flex-col">
+<div class="flex justify-between items-start mb-6">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Budget Utilization</h2>
+<button class="text-on-surface-variant hover:text-primary transition-colors text-nav-item font-nav-item">View Details</button>
+</div>
+<div class="flex-1 flex flex-col justify-center gap-6">
+<!-- Category 1 -->
+<div class="flex items-center gap-4">
+<div class="relative w-12 h-12 flex-shrink-0">
+<svg class="w-full h-full -rotate-90 transform" viewBox="0 0 36 36">
+<circle class="text-surface-container-high" cx="18" cy="18" fill="none" r="15" stroke="currentColor" stroke-width="4"></circle>
+<circle cx="18" cy="18" fill="none" r="15" stroke="var(--chart-pink)" stroke-dasharray="94.2" stroke-dashoffset="20" stroke-linecap="round" stroke-width="4"></circle>
+</svg>
+<span class="absolute inset-0 flex items-center justify-center text-label-caps font-label-caps">78%</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<span class="font-body-md text-body-md text-on-surface font-medium">Housing &amp; Utilities</span>
+<span class="font-body-md text-body-md text-on-surface-variant">₹3,200 / ₹4,100</span>
+</div>
+</div>
+</div>
+<!-- Category 2 -->
+<div class="flex items-center gap-4">
+<div class="relative w-12 h-12 flex-shrink-0">
+<svg class="w-full h-full -rotate-90 transform" viewBox="0 0 36 36">
+<circle class="text-surface-container-high" cx="18" cy="18" fill="none" r="15" stroke="currentColor" stroke-width="4"></circle>
+<circle cx="18" cy="18" fill="none" r="15" stroke="var(--chart-yellow)" stroke-dasharray="94.2" stroke-dashoffset="50" stroke-linecap="round" stroke-width="4"></circle>
+</svg>
+<span class="absolute inset-0 flex items-center justify-center text-label-caps font-label-caps">45%</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<span class="font-body-md text-body-md text-on-surface font-medium">Discretionary</span>
+<span class="font-body-md text-body-md text-on-surface-variant">₹1,125 / ₹2,500</span>
+</div>
+</div>
+</div>
+<!-- Category 3 -->
+<div class="flex items-center gap-4">
+<div class="relative w-12 h-12 flex-shrink-0">
+<svg class="w-full h-full -rotate-90 transform" viewBox="0 0 36 36">
+<circle class="text-surface-container-high" cx="18" cy="18" fill="none" r="15" stroke="currentColor" stroke-width="4"></circle>
+<circle cx="18" cy="18" fill="none" r="15" stroke="var(--chart-green)" stroke-dasharray="94.2" stroke-dashoffset="80" stroke-linecap="round" stroke-width="4"></circle>
+</svg>
+<span class="absolute inset-0 flex items-center justify-center text-label-caps font-label-caps">15%</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<span class="font-body-md text-body-md text-on-surface font-medium">Travel &amp; Leisure</span>
+<span class="font-body-md text-body-md text-on-surface-variant">₹300 / ₹2,000</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

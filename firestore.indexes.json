@@ -1,0 +1,128 @@
+{
+  "indexes": [
+    // ── transactions ──────────────────────────────────────────────────────────
+    // Used by: "all expenses for a wallet, sorted by date"
+    {
+      "collectionGroup": "transactions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "walletId",  "order": "ASCENDING"  },
+        { "fieldPath": "date",      "order": "DESCENDING" }
+      ]
+    },
+    // Used by: "all transactions in a category, sorted by date"
+    {
+      "collectionGroup": "transactions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "categoryId", "order": "ASCENDING"  },
+        { "fieldPath": "date",       "order": "DESCENDING" }
+      ]
+    },
+    // Used by: "all income or all expenses, sorted by date" (Dashboard)
+    {
+      "collectionGroup": "transactions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "type", "order": "ASCENDING"  },
+        { "fieldPath": "date", "order": "DESCENDING" }
+      ]
+    },
+    // Used by: "all recurring transactions" (recurring engine)
+    {
+      "collectionGroup": "transactions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "isRecurring", "order": "ASCENDING"  },
+        { "fieldPath": "date",        "order": "DESCENDING" }
+      ]
+    },
+    // Used by: monthly spending analytics — filter by date range + type
+    {
+      "collectionGroup": "transactions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "type", "order": "ASCENDING"  },
+        { "fieldPath": "date", "order": "ASCENDING"  }
+      ]
+    },
+    // ── subscriptions ─────────────────────────────────────────────────────────
+    // Used by: "upcoming bills" widget — active subs sorted by next due date
+    {
+      "collectionGroup": "subscriptions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "active",      "order": "ASCENDING" },
+        { "fieldPath": "nextDueDate", "order": "ASCENDING" }
+      ]
+    },
+    // ── recurringRules ────────────────────────────────────────────────────────
+    // Used by: scheduled Cloud Function — active rules due to run
+    {
+      "collectionGroup": "recurringRules",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "active",      "order": "ASCENDING" },
+        { "fieldPath": "nextRunDate", "order": "ASCENDING" }
+      ]
+    },
+    // ── budgets ───────────────────────────────────────────────────────────────
+    // Used by: "budget for a category in a given month"
+    {
+      "collectionGroup": "budgets",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "categoryId", "order": "ASCENDING" },
+        { "fieldPath": "month",      "order": "DESCENDING" }
+      ]
+    },
+    // Used by: GET /api/transactions?walletId=X&type=expense (filtered by wallet + type)
+    {
+      "collectionGroup": "transactions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "walletId", "order": "ASCENDING"  },
+        { "fieldPath": "type",     "order": "ASCENDING"  },
+        { "fieldPath": "date",     "order": "DESCENDING" }
+      ]
+    },
+    // Used by: budget spend calculation — sum expenses for a category in a date range
+    {
+      "collectionGroup": "transactions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "categoryId", "order": "ASCENDING"  },
+        { "fieldPath": "type",       "order": "ASCENDING"  },
+        { "fieldPath": "date",       "order": "DESCENDING" }
+      ]
+    },
+    // Used by: budget uniqueness check — query (categoryId, month) in POST /api/budgets
+    {
+      "collectionGroup": "budgets",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "month",      "order": "ASCENDING" },
+        { "fieldPath": "categoryId", "order": "ASCENDING" }
+      ]
+    },
+    // Used by: processRecurringRules idempotency check — (recurringRuleId, date)
+    {
+      "collectionGroup": "transactions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "recurringRuleId", "order": "ASCENDING"  },
+        { "fieldPath": "date",            "order": "DESCENDING" }
+      ]
+    },
+    // Used by: processSubscriptions idempotency check — (subscriptionId, date)
+    {
+      "collectionGroup": "transactions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "subscriptionId", "order": "ASCENDING"  },
+        { "fieldPath": "date",           "order": "DESCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
