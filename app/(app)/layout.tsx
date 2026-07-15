@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { CurrencyProvider } from "@/components/CurrencyProvider";
 
 interface NavItem {
   href: string;
@@ -60,8 +61,9 @@ export default function AppLayout({ children }: { children: ReactNode }) {
   const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh" }}>
-      {/* ── Mobile backdrop ─────────────────────────────────────────────────── */}
+    <CurrencyProvider>
+      <div style={{ display: "flex", minHeight: "100vh" }}>
+        {/* ── Mobile backdrop ─────────────────────────────────────────────────── */}
       {mobileOpen && (
         <div
           onClick={() => setMobileOpen(false)}
@@ -156,6 +158,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
           #mobile-menu-btn { display: flex !important; }
         }
       `}</style>
-    </div>
+      </div>
+    </CurrencyProvider>
   );
 }

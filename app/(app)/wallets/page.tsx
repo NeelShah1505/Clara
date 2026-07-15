@@ -3,6 +3,7 @@
 import Link from "next/link";
 import useSWR from "swr";
 import { fetcher } from "@/lib/utils/fetcher";
+import { useCurrency } from "@/components/CurrencyProvider";
 
 function getWalletStyles(type: string) {
   switch (type.toLowerCase()) {
@@ -16,6 +17,8 @@ function getWalletStyles(type: string) {
 export default function WalletsPage() {
   const { data, error, isLoading } = useSWR("/api/wallets", fetcher);
   const WALLETS = data?.wallets || [];
+  
+  const { format } = useCurrency();
 
   const totalAssets = WALLETS.filter((w: any) => w.balance > 0).reduce((s: number, w: any) => s + w.balance, 0);
   const totalLiabilities = Math.abs(WALLETS.filter((w: any) => w.balance < 0).reduce((s: number, w: any) => s + w.balance, 0));
@@ -37,15 +40,15 @@ export default function WalletsPage() {
       <div className="stat-grid reveal" style={{ marginBottom: "var(--gutter)" }}>
         <div className="stat-card" style={{ background: "var(--surface-container-lowest)", border: "1px solid rgba(0,0,0,0.06)" }}>
           <div className="stat-card-label">Total Assets</div>
-          <div className="stat-card-value" style={{ color: "#065f46" }}>₹{totalAssets.toLocaleString()}</div>
+          <div className="stat-card-value" style={{ color: "#065f46" }}>{format(totalAssets)}</div>
         </div>
         <div className="stat-card" style={{ background: "var(--surface-container-lowest)", border: "1px solid rgba(0,0,0,0.06)" }}>
           <div className="stat-card-label">Total Liabilities</div>
-          <div className="stat-card-value" style={{ color: "var(--error)" }}>₹{totalLiabilities.toLocaleString()}</div>
+          <div className="stat-card-value" style={{ color: "var(--error)" }}>{format(totalLiabilities)}</div>
         </div>
         <div className="stat-card" style={{ background: "var(--brand-yellow)" }}>
           <div className="stat-card-label">Total Net Balance</div>
-          <div className="stat-card-value">₹{netWorth.toLocaleString()}</div>
+          <div className="stat-card-value">{format(netWorth)}</div>
         </div>
       </div>
 
@@ -85,7 +88,7 @@ export default function WalletsPage() {
                 <div>
                   <p style={{ fontSize: 12, color: "var(--on-surface-variant)", marginBottom: "0.25rem" }}>Current Balance</p>
                   <p style={{ fontSize: 24, fontWeight: 700, color: w.balance >= 0 ? "var(--on-surface)" : "var(--error)", letterSpacing: "-0.02em" }}>
-                    {w.balance < 0 ? "-" : ""}{w.currency === "INR" ? "₹" : w.currency}{Math.abs(w.balance).toLocaleString()}
+                    {format(w.balance, w.currency)}
                   </p>
                 </div>
               </div>

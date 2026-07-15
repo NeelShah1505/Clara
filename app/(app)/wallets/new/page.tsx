@@ -75,11 +75,14 @@ export default function NewWalletPage() {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
             <div className="input-group">
               <label className="input-label" htmlFor="type">Account Type</label>
-              <select id="type" name="type" className="input" required defaultValue="Bank Account">
-                <option value="Bank Account">Bank Account</option>
-                <option value="Savings">Savings</option>
-                <option value="Credit Card">Credit Card</option>
-                <option value="Cash">Cash Wallet</option>
+              <select id="type" name="type" className="input" required defaultValue="bank">
+                <option value="bank">Bank Account</option>
+                <option value="cash">Cash Wallet</option>
+                <option value="credit_card">Credit Card</option>
+                <option value="debit_card">Debit Card</option>
+                <option value="upi">UPI / Mobile</option>
+                <option value="paypal">PayPal</option>
+                <option value="crypto">Crypto</option>
               </select>
             </div>
             

@@ -1,30 +1,23 @@
-import type { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = { title: "Categories" };
-
-const CATEGORIES = [
-  { id: "1", name: "Housing",        type: "expense", icon: "home",            color: "var(--primary)" },
-  { id: "2", name: "Food & Dining",  type: "expense", icon: "restaurant",      color: "var(--brand-pink)" },
-  { id: "3", name: "Transportation", type: "expense", icon: "directions_car",  color: "var(--brand-blue)" },
-  { id: "4", name: "Entertainment",  type: "expense", icon: "movie",           color: "var(--brand-yellow)" },
-  { id: "5", name: "Health",         type: "expense", icon: "favorite",        color: "var(--brand-green)" },
-  { id: "6", name: "Salary",         type: "income",  icon: "payments",        color: "var(--brand-green)" },
-  { id: "7", name: "Investments",    type: "income",  icon: "trending_up",     color: "var(--brand-blue)" },
-  { id: "8", name: "Miscellaneous",  type: "expense", icon: "category",        color: "var(--surface-variant)" },
-];
+import Link from "next/link";
+import useSWR from "swr";
+import { fetcher } from "@/lib/utils/fetcher";
 
 export default function CategoriesPage() {
-  const expenses = CATEGORIES.filter((c) => c.type === "expense");
-  const income = CATEGORIES.filter((c) => c.type === "income");
+  const { data, error, isLoading } = useSWR("/api/categories", fetcher);
+  
+  const categories = data?.categories || [];
 
-  const renderCategoryGrid = (items: typeof CATEGORIES) => (
+  const renderCategoryGrid = (items: any[]) => (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "1rem" }}>
       {items.map((c) => (
-        <div key={c.id} className="card" style={{ padding: "1rem", display: "flex", alignItems: "center", gap: "0.75rem", cursor: "pointer" }}>
+        <div key={c.id} className="card reveal" style={{ padding: "1rem", display: "flex", alignItems: "center", gap: "0.75rem", cursor: "pointer" }}>
           <div style={{ width: 36, height: 36, borderRadius: "var(--radius-sm)", background: c.color, display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span className="material-symbols-outlined" style={{ fontSize: 18, color: c.color === "var(--primary)" || c.color === "var(--surface-variant)" ? "#fff" : "var(--primary)" }}>{c.icon}</span>
+            <span className="material-symbols-outlined" style={{ fontSize: 18, color: "#fff" }}>{c.icon}</span>
           </div>
           <span style={{ fontWeight: 500, fontSize: 14 }}>{c.name}</span>
+          {c.isDefault && <span style={{ marginLeft: "auto", fontSize: 10, background: "var(--surface-variant)", padding: "2px 6px", borderRadius: 4 }}>Default</span>}
         </div>
       ))}
     </div>
@@ -37,20 +30,26 @@ export default function CategoriesPage() {
           <h1>Categories</h1>
           <p>Manage how your transactions are classified</p>
         </div>
-        <button className="btn btn-primary">
+        <Link href="/categories/new" className="btn btn-primary">
           <span className="material-symbols-outlined" style={{ fontSize: 18 }}>add</span>
           New Category
-        </button>
+        </Link>
       </div>
 
       <div className="reveal">
-        <h2 className="text-headline-sm" style={{ marginBottom: "1rem" }}>Expense Categories</h2>
-        {renderCategoryGrid(expenses)}
-      </div>
-
-      <div className="reveal" style={{ marginTop: "2rem" }}>
-        <h2 className="text-headline-sm" style={{ marginBottom: "1rem" }}>Income Categories</h2>
-        {renderCategoryGrid(income)}
+        {isLoading ? (
+           <div style={{ padding: "3rem 0", textAlign: "center" }}>
+             <div className="spinner" style={{ margin: "0 auto 1rem" }} />
+             <p style={{ color: "var(--on-surface-variant)", fontSize: 14 }}>Loading categories...</p>
+           </div>
+        ) : categories.length === 0 ? (
+           <div style={{ padding: "3rem 0", textAlign: "center" }}>
+             <span className="material-symbols-outlined" style={{ fontSize: 32, color: "var(--outline-variant)", marginBottom: "0.5rem" }}>category</span>
+             <p style={{ color: "var(--on-surface-variant)", fontSize: 14 }}>No categories found.</p>
+           </div>
+        ) : (
+          renderCategoryGrid(categories)
+        )}
       </div>
     </div>
   );

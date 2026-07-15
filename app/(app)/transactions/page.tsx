@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import useSWR from "swr";
 import { fetcher } from "@/lib/utils/fetcher";
+import { useCurrency } from "@/components/CurrencyProvider";
 
 const FILTERS = ["All", "Income", "Expense"];
 
@@ -14,6 +15,8 @@ export default function TransactionsPage() {
 
   const { data, error, isLoading } = useSWR("/api/transactions", fetcher);
   const TRANSACTIONS = data?.transactions || [];
+  
+  const { format } = useCurrency();
 
   const filtered = TRANSACTIONS.filter((t: any) => {
     const matchType = activeFilter === "All" || t.type === activeFilter.toLowerCase();
@@ -41,16 +44,16 @@ export default function TransactionsPage() {
       <div style={{ display: "flex", gap: "1rem", marginBottom: "1.5rem", flexWrap: "wrap" }}>
         <div className="stat-card reveal" style={{ background: "var(--brand-green)", flex: "1 1 160px", minWidth: 0 }}>
           <div className="stat-card-label">Total Income</div>
-          <div className="stat-card-value" style={{ fontSize: 24 }}>₹{totalIncome.toLocaleString()}</div>
+          <div className="stat-card-value" style={{ fontSize: 24 }}>{format(totalIncome)}</div>
         </div>
         <div className="stat-card reveal" data-delay="100" style={{ background: "var(--brand-pink)", flex: "1 1 160px", minWidth: 0 }}>
           <div className="stat-card-label">Total Expenses</div>
-          <div className="stat-card-value" style={{ fontSize: 24 }}>₹{totalExpenses.toLocaleString()}</div>
+          <div className="stat-card-value" style={{ fontSize: 24 }}>{format(totalExpenses)}</div>
         </div>
         <div className="stat-card reveal" data-delay="200" style={{ background: "var(--brand-yellow)", flex: "1 1 160px", minWidth: 0 }}>
           <div className="stat-card-label">Net</div>
           <div className="stat-card-value" style={{ fontSize: 24, color: totalIncome - totalExpenses >= 0 ? "#065f46" : "var(--error)" }}>
-            ₹{(totalIncome - totalExpenses).toLocaleString()}
+            {format(totalIncome - totalExpenses)}
           </div>
         </div>
       </div>
@@ -133,7 +136,7 @@ export default function TransactionsPage() {
                     </td>
                     <td style={{ color: "var(--on-surface-variant)" }}>{tx.date}</td>
                     <td style={{ textAlign: "right", fontWeight: 700, color: tx.type === "income" ? "#065f46" : "var(--on-surface)", letterSpacing: "-0.01em" }}>
-                      {tx.type === "income" ? "+" : "−"}{tx.currency === "INR" ? "₹" : tx.currency}{tx.amount.toLocaleString()}
+                      {tx.type === "income" ? "+" : "−"}{format(tx.amount, tx.currency)}
                     </td>
                     <td style={{ textAlign: "right" }}>
                       <button className="btn btn-ghost btn-icon" aria-label="Edit transaction">

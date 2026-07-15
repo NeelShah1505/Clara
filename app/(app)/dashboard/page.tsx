@@ -3,6 +3,7 @@
 import Link from "next/link";
 import useSWR from "swr";
 import { fetcher } from "@/lib/utils/fetcher";
+import { useCurrency } from "@/components/CurrencyProvider";
 
 // ── Stat card ──────────────────────────────────────────────────────────────────
 function StatCard({
@@ -38,7 +39,7 @@ function BudgetRow({
       <div className="flex-between" style={{ marginBottom: "0.375rem" }}>
         <span style={{ fontSize: 14, fontWeight: 500, color: "var(--on-surface)" }}>{label}</span>
         <span style={{ fontSize: 13, color: over ? "var(--error)" : "var(--on-surface-variant)" }}>
-          ₹{spent.toLocaleString()} / ₹{limit.toLocaleString()}
+          {spent} / {limit}
         </span>
       </div>
       <div className="progress-track">
@@ -101,6 +102,8 @@ export default function DashboardPage() {
   const { data: txData } = useSWR("/api/transactions?limit=5", fetcher);
   const { data: subData } = useSWR("/api/subscriptions", fetcher);
   const { data: catData } = useSWR("/api/categories", fetcher);
+  
+  const { format } = useCurrency();
 
   const wallets = walletsData?.wallets || [];
   const summary = summaryData || { totalIncome: 0, totalExpense: 0, net: 0 };
@@ -130,10 +133,10 @@ export default function DashboardPage() {
 
       {/* ── Stat cards ──────────────────────────────────────────────────────── */}
       <div className="stat-grid" style={{ marginBottom: "var(--gutter)" }}>
-        <StatCard label="Current Balance"     value={`₹${totalBalance.toLocaleString()}`}      trend="From wallets" trendUp color="var(--brand-yellow)" glow="rgba(255,255,255,0.5)" />
-        <StatCard label="This Month Spending" value={`₹${summary.totalExpense.toLocaleString()}`} trend="Expenses" trendUp={false} color="var(--brand-pink)"   glow="rgba(255,255,255,0.5)" />
-        <StatCard label="Remaining Budget"    value={`₹${remainingBudget.toLocaleString()}`}      trend={`${budgetPct}% budget used`} trendUp color="var(--brand-green)"  glow="rgba(255,255,255,0.5)" />
-        <StatCard label="Monthly Income"      value={`₹${summary.totalIncome.toLocaleString()}`}  trend="Income" trendUp color="var(--brand-blue)"   glow="rgba(255,255,255,0.5)" />
+        <StatCard label="Current Balance"     value={format(totalBalance)}      trend="From wallets" trendUp color="var(--brand-yellow)" glow="rgba(255,255,255,0.5)" />
+        <StatCard label="This Month Spending" value={format(summary.totalExpense)} trend="Expenses" trendUp={false} color="var(--brand-pink)"   glow="rgba(255,255,255,0.5)" />
+        <StatCard label="Remaining Budget"    value={format(remainingBudget)}      trend={`${budgetPct}% budget used`} trendUp color="var(--brand-green)"  glow="rgba(255,255,255,0.5)" />
+        <StatCard label="Monthly Income"      value={format(summary.totalIncome)}  trend="Income" trendUp color="var(--brand-blue)"   glow="rgba(255,255,255,0.5)" />
       </div>
 
       {/* ── Charts row ──────────────────────────────────────────────────────── */}
@@ -171,8 +174,8 @@ export default function DashboardPage() {
                   <BudgetRow 
                     key={b.budgetId} 
                     label={cat.name} 
-                    spent={b.actualSpend} 
-                    limit={b.monthlyLimit} 
+                    spent={format(b.actualSpend)} 
+                    limit={format(b.monthlyLimit)} 
                     color={cat.color} 
                   />
                 );
@@ -203,7 +206,7 @@ export default function DashboardPage() {
                     <p style={{ fontSize: 14, fontWeight: 500 }}>{s.name}</p>
                     <p style={{ fontSize: 12, color: "var(--on-surface-variant)" }}>{s.nextDueDate}</p>
                   </div>
-                  <p style={{ fontSize: 14, fontWeight: 600 }}>₹{s.amount.toLocaleString()}</p>
+                  <p style={{ fontSize: 14, fontWeight: 600 }}>{format(s.amount)}</p>
                 </div>
               ))
             )}
@@ -233,7 +236,7 @@ export default function DashboardPage() {
                     merchant={tx.merchant || tx.description}
                     category={cat.name}
                     date={tx.date}
-                    amount={tx.amount.toLocaleString()}
+                    amount={format(tx.amount)}
                     isIncome={tx.type === "income"}
                   />
                 );

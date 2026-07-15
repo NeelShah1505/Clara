@@ -21,11 +21,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     const snapshot = await db
       .collection(`users/${uid}/categories`)
-      .orderBy("isDefault", "desc")  // defaults first
       .orderBy("name", "asc")
       .get();
 
-    const categories: Category[] = snapshot.docs.map((doc) => {
+    let categories: Category[] = snapshot.docs.map((doc) => {
       const d = doc.data();
       return {
         id:        doc.id,
@@ -36,6 +35,39 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         createdAt: (d.createdAt as Timestamp).toDate().toISOString(),
       };
     });
+
+    if (categories.length === 0) {
+      // Auto-seed defaults
+      const DEFAULT_CATEGORIES = [
+        { name: "Housing", type: "expense", icon: "home", color: "#3b82f6" },
+        { name: "Food", type: "expense", icon: "restaurant", color: "#ec4899" },
+        { name: "Transport", type: "expense", icon: "directions_car", color: "#eab308" },
+        { name: "Health", type: "expense", icon: "favorite", color: "#22c55e" },
+        { name: "Salary", type: "income", icon: "payments", color: "#22c55e" },
+        { name: "Other", type: "expense", icon: "category", color: "#64748b" },
+      ];
+      
+      const batch = db.batch();
+      for (const cat of DEFAULT_CATEGORIES) {
+        const ref = db.collection(`users/${uid}/categories`).doc();
+        batch.set(ref, {
+          name: cat.name,
+          icon: cat.icon,
+          color: cat.color,
+          isDefault: true,
+          createdAt: FieldValue.serverTimestamp(),
+        });
+        categories.push({
+          id: ref.id,
+          name: cat.name,
+          icon: cat.icon,
+          color: cat.color,
+          isDefault: true,
+          createdAt: new Date().toISOString(),
+        });
+      }
+      await batch.commit();
+    }
 
     return NextResponse.json({ categories });
   } catch (err) {

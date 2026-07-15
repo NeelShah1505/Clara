@@ -3,6 +3,7 @@
 import Link from "next/link";
 import useSWR from "swr";
 import { fetcher } from "@/lib/utils/fetcher";
+import { useCurrency } from "@/components/CurrencyProvider";
 
 export default function SubscriptionsPage() {
   const { data: subData, isLoading: subLoading } = useSWR("/api/subscriptions", fetcher);
@@ -10,6 +11,8 @@ export default function SubscriptionsPage() {
 
   const subscriptions = subData?.subscriptions || [];
   const categories = catData?.categories || [];
+  
+  const { format } = useCurrency();
 
   const SUBS = subscriptions.map((s: any) => {
     const cat = categories.find((c: any) => c.id === s.categoryId) || { name: s.categoryId, icon: "receipt", color: "var(--brand-blue)" };
@@ -48,11 +51,11 @@ export default function SubscriptionsPage() {
         </div>
         <div className="stat-card" style={{ background: "var(--brand-pink)" }}>
           <div className="stat-card-label">Average Monthly Cost</div>
-          <div className="stat-card-value">₹{Math.round(monthlyTotal).toLocaleString()}</div>
+          <div className="stat-card-value">{format(monthlyTotal)}</div>
         </div>
         <div className="stat-card" style={{ background: "var(--brand-yellow)" }}>
           <div className="stat-card-label">Total Yearly Cost</div>
-          <div className="stat-card-value">₹{Math.round(yearlyTotal).toLocaleString()}</div>
+          <div className="stat-card-value">{format(yearlyTotal)}</div>
         </div>
       </div>
 
@@ -92,7 +95,7 @@ export default function SubscriptionsPage() {
                     <span className={`badge ${s.cycle === "Monthly" ? "badge-blue" : "badge-yellow"}`}>{s.cycle}</span>
                   </td>
                   <td style={{ color: "var(--on-surface-variant)" }}>{s.nextDate}</td>
-                  <td style={{ textAlign: "right", fontWeight: 600 }}>₹{s.cost.toLocaleString()}</td>
+                  <td style={{ textAlign: "right", fontWeight: 600 }}>{format(s.cost)}</td>
                   <td style={{ textAlign: "right" }}>
                     <button className="btn btn-ghost btn-icon"><span className="material-symbols-outlined" style={{ fontSize: 18 }}>edit</span></button>
                     <button className="btn btn-ghost btn-icon" style={{ color: "var(--error)" }}><span className="material-symbols-outlined" style={{ fontSize: 18 }}>cancel</span></button>

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import useSWR from "swr";
 import { fetcher } from "@/lib/utils/fetcher";
+import { useCurrency } from "@/components/CurrencyProvider";
 
 function NetWorthRing({ value }: { value: number }) {
   const r = 60, c = 2 * Math.PI * r;
@@ -37,6 +38,8 @@ export default function AnalyticsPage() {
   const { data: trendData } = useSWR("/api/analytics/trend?months=6", fetcher);
   const { data: categoryData } = useSWR(`/api/analytics/by-category?from=${from}&to=${to}&type=expense`, fetcher);
   const { data: categories } = useSWR("/api/categories", fetcher);
+  
+  const { format } = useCurrency();
 
   const summary = summaryData || { totalIncome: 0, totalExpense: 0, net: 0 };
   const trend = trendData?.trend || [];
@@ -58,7 +61,7 @@ export default function AnalyticsPage() {
     const cat = cats.find((c: any) => c.id === b.categoryId) || { name: "Other", color: "var(--brand-blue)" };
     return {
       name: cat.name,
-      amount: `₹${b.total.toLocaleString()}`,
+      amount: format(b.total),
       pct: b.percentage,
       color: cat.color,
     };
@@ -74,9 +77,9 @@ export default function AnalyticsPage() {
       {/* ── KPI row ────────────────────────────────────────────────────────────── */}
       <div className="stat-grid reveal" style={{ marginBottom: "var(--gutter)" }}>
         {[
-          { label: "Net Cash Flow",   value: `₹${summary.net.toLocaleString()}`,  bg: "var(--brand-yellow)", trend: summary.net >= 0 ? "Positive" : "Negative" },
-          { label: "Total Income",    value: `₹${summary.totalIncome.toLocaleString()}`,  bg: "var(--brand-green)",  trend: "This month" },
-          { label: "Total Expenses",  value: `₹${summary.totalExpense.toLocaleString()}`, bg: "var(--brand-pink)",   trend: "This month" },
+          { label: "Net Cash Flow",   value: format(summary.net),  bg: "var(--brand-yellow)", trend: summary.net >= 0 ? "Positive" : "Negative" },
+          { label: "Total Income",    value: format(summary.totalIncome),  bg: "var(--brand-green)",  trend: "This month" },
+          { label: "Total Expenses",  value: format(summary.totalExpense), bg: "var(--brand-pink)",   trend: "This month" },
           { label: "Top Category",    value: CATEGORY_DATA[0]?.name || "-",   bg: "var(--brand-blue)",   trend: CATEGORY_DATA[0]?.amount || "No data" },
         ].map((k, i) => (
           <div key={k.label} className="stat-card reveal" data-delay={`${i * 50}` as "50" | "100" | "150" | "200" | "250" | "300"} style={{ background: k.bg }}>
@@ -134,8 +137,8 @@ export default function AnalyticsPage() {
                 <NetWorthRing value={72} />
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
-                {CATEGORY_DATA.map((cat: any) => (
-                  <div key={cat.name}>
+                {CATEGORY_DATA.map((cat: any, i: number) => (
+                  <div key={`${cat.name}-${i}`}>
                     <div className="flex-between" style={{ marginBottom: "0.25rem" }}>
                       <span style={{ fontSize: 13, fontWeight: 500, display: "flex", alignItems: "center", gap: 6 }}>
                         <span style={{ width: 8, height: 8, borderRadius: 2, background: cat.color, display: "inline-block" }} />
@@ -186,9 +189,9 @@ export default function AnalyticsPage() {
                 return (
                   <tr key={month}>
                     <td style={{ fontWeight: 500 }}>{month}</td>
-                    <td style={{ color: "#065f46", fontWeight: 600 }}>₹{INCOME[i].toLocaleString()}</td>
-                    <td style={{ fontWeight: 600 }}>₹{SPENDING[i].toLocaleString()}</td>
-                    <td style={{ fontWeight: 600 }}>₹{savings.toLocaleString()}</td>
+                    <td style={{ color: "#065f46", fontWeight: 600 }}>{format(INCOME[i])}</td>
+                    <td style={{ fontWeight: 600 }}>{format(SPENDING[i])}</td>
+                    <td style={{ fontWeight: 600 }}>{format(savings)}</td>
                     <td>
                       <span className={`badge ${rate >= 30 ? "badge-green" : rate >= 15 ? "badge-yellow" : "badge-red"}`}>{rate}%</span>
                     </td>

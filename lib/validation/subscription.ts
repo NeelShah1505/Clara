@@ -7,7 +7,7 @@
 
 import { z } from "zod/v4";
 
-const BILLING_CYCLES = ["weekly", "monthly", "quarterly", "yearly"] as const;
+const BILLING_CYCLES = ["weekly", "monthly", "quarterly", "yearly", "custom"] as const;
 
 const CurrencySchema = z
   .string()
@@ -28,6 +28,7 @@ export const CreateSubscriptionSchema = z.object({
   categoryId:   z.string().min(1, "categoryId is required"),
   walletId:     z.string().min(1, "walletId is required"),
   notes:        z.string().max(2000).optional().default(""),
+  customDays:   z.number().positive().int().optional(),
 });
 
 export const UpdateSubscriptionSchema = z.object({
@@ -40,6 +41,7 @@ export const UpdateSubscriptionSchema = z.object({
   walletId:     z.string().min(1).optional(),
   active:       z.boolean().optional(),
   notes:        z.string().max(2000).optional(),
+  customDays:   z.number().positive().int().optional(),
 }).refine(
   (data) => Object.keys(data).length > 0,
   "At least one field must be provided for update"
