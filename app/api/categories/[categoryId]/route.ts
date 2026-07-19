@@ -34,6 +34,7 @@ export async function GET(request: NextRequest, { params }: Params): Promise<Nex
       name:      d.name,
       icon:      d.icon,
       color:     d.color,
+      type:      d.type ?? "expense",
       isDefault: d.isDefault ?? false,
       createdAt: (d.createdAt as Timestamp).toDate().toISOString(),
     };

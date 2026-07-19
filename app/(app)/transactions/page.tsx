@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useState } from "react";
-
 import useSWR from "swr";
 import { fetcher } from "@/lib/utils/fetcher";
 import { useCurrency } from "@/components/CurrencyProvider";
@@ -12,20 +11,39 @@ const FILTERS = ["All", "Income", "Expense"];
 export default function TransactionsPage() {
   const [activeFilter, setActiveFilter] = useState("All");
   const [search, setSearch] = useState("");
+  const [deleting, setDeleting] = useState<string | null>(null);
 
-  const { data, error, isLoading } = useSWR("/api/transactions", fetcher);
-  const TRANSACTIONS = data?.transactions || [];
+  const { data, error, isLoading, mutate } = useSWR("/api/transactions", fetcher);
+  const { data: catData } = useSWR("/api/categories", fetcher);
   
+  const TRANSACTIONS = data?.transactions || [];
+  const categories = catData?.categories || [];
   const { format } = useCurrency();
+
+  const getCatName = (id: string) => categories.find((c: any) => c.id === id)?.name || "Other";
 
   const filtered = TRANSACTIONS.filter((t: any) => {
     const matchType = activeFilter === "All" || t.type === activeFilter.toLowerCase();
-    const matchSearch = t.merchant.toLowerCase().includes(search.toLowerCase()) || (t.category || "").toLowerCase().includes(search.toLowerCase());
+    const catName = getCatName(t.categoryId);
+    const searchString = search.toLowerCase();
+    const matchSearch = (t.merchant || "").toLowerCase().includes(searchString) || 
+                        catName.toLowerCase().includes(searchString) ||
+                        (t.notes || "").toLowerCase().includes(searchString);
     return matchType && matchSearch;
   });
 
   const totalExpenses = TRANSACTIONS.filter((t: any) => t.type === "expense").reduce((s: number, t: any) => s + t.amount, 0);
   const totalIncome = TRANSACTIONS.filter((t: any) => t.type === "income").reduce((s: number, t: any) => s + t.amount, 0);
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Delete this transaction? Your wallet balance will be adjusted accordingly.")) return;
+    setDeleting(id);
+    try {
+      await fetch(`/api/transactions/${id}`, { method: "DELETE" });
+      mutate();
+    } catch (e) { console.error(e); }
+    setDeleting(null);
+  };
 
   return (
     <div>
@@ -92,6 +110,7 @@ export default function TransactionsPage() {
       <div className="card reveal" style={{ padding: 0, overflow: "hidden" }}>
         {isLoading ? (
           <div style={{ padding: "3rem", textAlign: "center", color: "var(--on-surface-variant)" }}>
+            <div className="spinner" style={{ margin: "0 auto 1rem" }} />
             Loading transactions...
           </div>
         ) : error ? (
@@ -118,32 +137,44 @@ export default function TransactionsPage() {
               {filtered.map((tx: any) => {
                 const icon = tx.type === "income" ? "arrow_downward" : "arrow_upward";
                 const iconBg = tx.type === "income" ? "var(--brand-green)" : "var(--surface-variant)";
+                const cat = categories.find((c: any) => c.id === tx.categoryId);
                 return (
                   <tr key={tx.id}>
                     <td>
                       <div style={{ display: "flex", alignItems: "center", gap: "0.875rem" }}>
                         <div style={{
                           width: 40, height: 40, borderRadius: "var(--radius-full)",
-                          background: iconBg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                          background: cat ? `${cat.color}22` : iconBg, 
+                          display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
                         }}>
-                          <span className="material-symbols-outlined" style={{ fontSize: 18, color: "var(--primary)" }}>{icon}</span>
+                          <span className="material-symbols-outlined" style={{ fontSize: 18, color: cat ? cat.color : "var(--primary)" }}>
+                            {cat ? cat.icon : icon}
+                          </span>
                         </div>
-                        <span style={{ fontWeight: 500 }}>{tx.merchant || "Unknown"}</span>
+                        <div>
+                          <span style={{ fontWeight: 500, display: "block", marginBottom: 2 }}>{tx.merchant || "Unknown"}</span>
+                          {tx.notes && <span style={{ fontSize: 11, color: "var(--on-surface-variant)" }}>{tx.notes}</span>}
+                        </div>
                       </div>
                     </td>
                     <td>
-                      <span className={`badge badge-${tx.type === "income" ? "green" : "grey"}`}>{tx.category || "Uncategorized"}</span>
+                      <span className={`badge badge-${tx.type === "income" ? "green" : "grey"}`}>{getCatName(tx.categoryId)}</span>
                     </td>
-                    <td style={{ color: "var(--on-surface-variant)" }}>{tx.date}</td>
+                    <td style={{ color: "var(--on-surface-variant)", fontSize: 14 }}>{tx.date}</td>
                     <td style={{ textAlign: "right", fontWeight: 700, color: tx.type === "income" ? "#065f46" : "var(--on-surface)", letterSpacing: "-0.01em" }}>
                       {tx.type === "income" ? "+" : "−"}{format(tx.amount, tx.currency)}
                     </td>
                     <td style={{ textAlign: "right" }}>
-                      <button className="btn btn-ghost btn-icon" aria-label="Edit transaction">
-                        <span className="material-symbols-outlined" style={{ fontSize: 18 }}>edit</span>
-                      </button>
-                      <button className="btn btn-ghost btn-icon" aria-label="Delete transaction" style={{ color: "var(--error)" }}>
-                        <span className="material-symbols-outlined" style={{ fontSize: 18 }}>delete</span>
+                      <button 
+                        className="btn btn-ghost btn-icon" 
+                        aria-label="Delete transaction" 
+                        style={{ color: "var(--error)" }}
+                        onClick={() => handleDelete(tx.id)}
+                        disabled={deleting === tx.id}
+                      >
+                        <span className="material-symbols-outlined" style={{ fontSize: 18 }}>
+                          {deleting === tx.id ? "hourglass_empty" : "delete"}
+                        </span>
                       </button>
                     </td>
                   </tr>

@@ -1,19 +1,74 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import useSWR from "swr";
 import { fetcher } from "@/lib/utils/fetcher";
+import { useCurrency } from "@/components/CurrencyProvider";
 
 export default function NewTransactionPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [txType, setTxType] = useState(searchParams.get("type") || "expense");
+  const [showCustomCategory, setShowCustomCategory] = useState(false);
+  const [customCategoryName, setCustomCategoryName] = useState("");
+  const [creatingCategory, setCreatingCategory] = useState(false);
+  // Track selected category explicitly so custom-created ones auto-select
+  const [selectedCategoryId, setSelectedCategoryId] = useState("");
 
-  // Fetch wallets for the wallet selection dropdown
   const { data: walletData, isLoading: walletsLoading } = useSWR("/api/wallets", fetcher);
+  const { data: catData, isLoading: catsLoading, mutate: mutateCats } = useSWR("/api/categories", fetcher);
+  const { baseCurrency, displayCurrency } = useCurrency();
+  const symbol = displayCurrency === "INR" ? "₹" : displayCurrency === "EUR" ? "€" : displayCurrency === "GBP" ? "£" : displayCurrency;
+
   const wallets = walletData?.wallets || [];
+  const allCategories = catData?.categories || [];
+  const categories = allCategories.filter((c: any) => c.type === txType);
+
+  // When txType changes, reset selected category to first of new type
+  useEffect(() => {
+    setSelectedCategoryId("");
+  }, [txType]);
+
+  // Auto-select first category when list loads
+  useEffect(() => {
+    if (!selectedCategoryId && categories.length > 0) {
+      setSelectedCategoryId(categories[0].id);
+    }
+  }, [categories, selectedCategoryId]);
+
+  const prefilledDate = searchParams.get("date") || new Date().toISOString().split("T")[0];
+
+  const handleCreateCustomCategory = async () => {
+    if (!customCategoryName.trim()) return;
+    setCreatingCategory(true);
+    try {
+      const res = await fetch("/api/categories", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: customCategoryName.trim(),
+          type: txType,
+          icon: txType === "income" ? "add_circle" : "category",
+          color: "#64748b",
+        }),
+      });
+      if (res.ok) {
+        const result = await res.json();
+        // Auto-select the newly created category
+        await mutateCats();
+        setSelectedCategoryId(result.category.id);
+        setShowCustomCategory(false);
+        setCustomCategoryName("");
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    setCreatingCategory(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,13 +76,23 @@ export default function NewTransactionPage() {
     setError("");
 
     const formData = new FormData(e.currentTarget);
+    const walletId = formData.get("walletId") as string;
+    const wallet = wallets.find((w: any) => w.id === walletId);
+
+    // Use the controlled selectedCategoryId state, not formData (since select is controlled)
+    if (!selectedCategoryId) {
+      setError("Please select a category.");
+      setIsSubmitting(false);
+      return;
+    }
+
     const data = {
-      type: formData.get("type") as string,
+      type: txType,
       amount: Number(formData.get("amount")),
-      currency: "INR",
+      currency: wallet?.currency || baseCurrency,
       merchant: formData.get("merchant") as string,
-      categoryId: formData.get("categoryId") as string,
-      walletId: formData.get("walletId") as string,
+      categoryId: selectedCategoryId,
+      walletId: walletId,
       date: formData.get("date") as string,
     };
 
@@ -78,23 +143,21 @@ export default function NewTransactionPage() {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
             <div className="input-group">
               <label className="input-label" htmlFor="type">Type</label>
-              <select id="type" name="type" className="input" required defaultValue="expense">
+              <select 
+                id="type" name="type" className="input" required 
+                value={txType}
+                onChange={(e) => setTxType(e.target.value)}
+              >
                 <option value="expense">Expense</option>
                 <option value="income">Income</option>
               </select>
             </div>
             
             <div className="input-group">
-              <label className="input-label" htmlFor="amount">Amount (₹)</label>
+              <label className="input-label" htmlFor="amount">Amount ({symbol})</label>
               <input 
-                id="amount"
-                name="amount"
-                type="number" 
-                step="0.01"
-                min="0.01"
-                className="input" 
-                placeholder="0.00"
-                required
+                id="amount" name="amount" type="number" step="0.01" min="0.01"
+                className="input" placeholder="0.00" required
               />
             </div>
           </div>
@@ -102,27 +165,56 @@ export default function NewTransactionPage() {
           <div className="input-group">
             <label className="input-label" htmlFor="merchant">Merchant / Title</label>
             <input 
-              id="merchant"
-              name="merchant"
-              type="text" 
-              className="input" 
-              placeholder="e.g. Starbucks, Salary, Amazon..."
-              required
+              id="merchant" name="merchant" type="text" className="input" 
+              placeholder="e.g. Starbucks, Salary, Amazon..." required
             />
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
             <div className="input-group">
-              <label className="input-label" htmlFor="categoryId">Category</label>
-              <select id="categoryId" name="categoryId" className="input" required defaultValue="General">
-                <option value="Housing">Housing</option>
-                <option value="Food & Dining">Food & Dining</option>
-                <option value="Transportation">Transportation</option>
-                <option value="Entertainment">Entertainment</option>
-                <option value="Health">Health</option>
-                <option value="Salary">Salary</option>
-                <option value="General">General / Other</option>
-              </select>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.25rem" }}>
+                <label className="input-label" htmlFor="categoryId" style={{ marginBottom: 0 }}>Category</label>
+                <button type="button" onClick={() => setShowCustomCategory(!showCustomCategory)} style={{ fontSize: 11, color: "var(--brand-blue)", background: "none", border: "none", cursor: "pointer", fontWeight: 600 }}>
+                  {showCustomCategory ? "← Back" : "+ Custom"}
+                </button>
+              </div>
+              {showCustomCategory ? (
+                <div style={{ display: "flex", gap: "0.5rem" }}>
+                  <input 
+                    type="text" className="input" placeholder="Category name..."
+                    value={customCategoryName}
+                    onChange={(e) => setCustomCategoryName(e.target.value)}
+                    style={{ flex: 1 }}
+                  />
+                  <button 
+                    type="button" className="btn btn-primary btn-sm"
+                    onClick={handleCreateCustomCategory}
+                    disabled={creatingCategory || !customCategoryName.trim()}
+                  >
+                    {creatingCategory ? "..." : "Add"}
+                  </button>
+                </div>
+              ) : (
+                <select 
+                  id="categoryId" className="input" required 
+                  disabled={catsLoading}
+                  value={selectedCategoryId}
+                  onChange={(e) => setSelectedCategoryId(e.target.value)}
+                >
+                  {catsLoading ? (
+                    <option value="">Loading...</option>
+                  ) : categories.length === 0 ? (
+                    <option value="">No {txType} categories</option>
+                  ) : (
+                    <>
+                      <option value="">Select a category</option>
+                      {categories.map((c: any) => (
+                        <option key={c.id} value={c.id}>{c.name}</option>
+                      ))}
+                    </>
+                  )}
+                </select>
+              )}
             </div>
 
             <div className="input-group">
@@ -134,7 +226,7 @@ export default function NewTransactionPage() {
                   <option value="">No wallets available</option>
                 ) : (
                   wallets.map((w: any) => (
-                    <option key={w.id} value={w.id}>{w.name} (₹{w.balance.toLocaleString()})</option>
+                    <option key={w.id} value={w.id}>{w.name}</option>
                   ))
                 )}
               </select>
@@ -144,12 +236,8 @@ export default function NewTransactionPage() {
           <div className="input-group">
             <label className="input-label" htmlFor="date">Date</label>
             <input 
-              id="date"
-              name="date"
-              type="date" 
-              className="input" 
-              required
-              defaultValue={new Date().toISOString().split("T")[0]}
+              id="date" name="date" type="date" className="input" required
+              defaultValue={prefilledDate}
             />
           </div>
 

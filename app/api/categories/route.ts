@@ -29,6 +29,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       return {
         id:        doc.id,
         name:      d.name,
+        type:      d.type || "expense",
         icon:      d.icon,
         color:     d.color,
         isDefault: d.isDefault ?? false,
@@ -39,12 +40,22 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (categories.length === 0) {
       // Auto-seed defaults
       const DEFAULT_CATEGORIES = [
-        { name: "Housing", type: "expense", icon: "home", color: "#3b82f6" },
-        { name: "Food", type: "expense", icon: "restaurant", color: "#ec4899" },
-        { name: "Transport", type: "expense", icon: "directions_car", color: "#eab308" },
-        { name: "Health", type: "expense", icon: "favorite", color: "#22c55e" },
-        { name: "Salary", type: "income", icon: "payments", color: "#22c55e" },
-        { name: "Other", type: "expense", icon: "category", color: "#64748b" },
+        { name: "Bills",          type: "expense", icon: "receipt",          color: "#f59e0b" },
+        { name: "Education",     type: "expense", icon: "school",           color: "#ef4444" },
+        { name: "Entertainment", type: "expense", icon: "sports_esports",   color: "#d946ef" },
+        { name: "Food & Dining", type: "expense", icon: "restaurant",       color: "#f97316" },
+        { name: "Health",        type: "expense", icon: "favorite",         color: "#f59e0b" },
+        { name: "Investment",    type: "expense", icon: "trending_up",      color: "#eab308" },
+        { name: "Shopping",      type: "expense", icon: "shopping_bag",     color: "#06b6d4" },
+        { name: "Travel",        type: "expense", icon: "flight",           color: "#06b6d4" },
+        { name: "Transport",     type: "expense", icon: "directions_car",   color: "#3b82f6" },
+        { name: "Housing",       type: "expense", icon: "home",             color: "#3b82f6" },
+        { name: "Salary",        type: "income",  icon: "payments",         color: "#22c55e" },
+        { name: "Freelance",     type: "income",  icon: "work",             color: "#10b981" },
+        { name: "Interest",      type: "income",  icon: "account_balance",  color: "#14b8a6" },
+        { name: "Gift",          type: "income",  icon: "redeem",           color: "#8b5cf6" },
+        { name: "Other Income",  type: "income",  icon: "add_circle",       color: "#64748b" },
+        { name: "Other",         type: "expense", icon: "category",         color: "#64748b" },
       ];
       
       const batch = db.batch();
@@ -52,6 +63,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         const ref = db.collection(`users/${uid}/categories`).doc();
         batch.set(ref, {
           name: cat.name,
+          type: cat.type,
           icon: cat.icon,
           color: cat.color,
           isDefault: true,
@@ -60,6 +72,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         categories.push({
           id: ref.id,
           name: cat.name,
+          type: cat.type as "income" | "expense",
           icon: cat.icon,
           color: cat.color,
           isDefault: true,
@@ -96,18 +109,19 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    const { name, icon, color } = parsed.data;
+    const { name, type, icon, color } = parsed.data;
     const db = getAdminDb();
     const now = FieldValue.serverTimestamp();
 
     const ref = db.collection(`users/${uid}/categories`).doc();
-    await ref.set({ name, icon, color, isDefault: false, createdAt: now });
+    await ref.set({ name, type, icon, color, isDefault: false, createdAt: now });
 
     return NextResponse.json(
       {
         category: {
           id: ref.id,
           name,
+          type,
           icon,
           color,
           isDefault: false,

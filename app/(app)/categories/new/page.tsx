@@ -17,6 +17,7 @@ export default function NewCategoryPage() {
     const formData = new FormData(e.currentTarget);
     const data = {
       name: formData.get("name") as string,
+      type: formData.get("type") as string,
       icon: formData.get("icon") as string,
       color: formData.get("color") as string,
     };
@@ -58,19 +59,22 @@ export default function NewCategoryPage() {
         )}
 
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-          <div className="input-group">
-            <label className="input-label" htmlFor="name">Category Name</label>
-            <input 
-              id="name"
-              name="name"
-              type="text" 
-              className="input" 
-              placeholder="e.g. Subscriptions, Gifts..."
-              required
-            />
-          </div>
-
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
+            <div className="input-group">
+              <label className="input-label" htmlFor="name">Category Name</label>
+              <input 
+                id="name" name="name" type="text" className="input" 
+                placeholder="e.g. Subscriptions, Gifts..." required
+              />
+            </div>
+            <div className="input-group">
+              <label className="input-label" htmlFor="type">Type</label>
+              <select id="type" name="type" className="input" required defaultValue="expense">
+                <option value="expense">Expense</option>
+                <option value="income">Income</option>
+              </select>
+            </div>
+          </div>          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
             <div className="input-group">
               <label className="input-label" htmlFor="icon">Material Icon Name</label>
               <input 

@@ -1,25 +1,35 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import useSWR from "swr";
 import { fetcher } from "@/lib/utils/fetcher";
+import { useCurrency } from "@/components/CurrencyProvider";
 
 export default function BudgetsPage() {
-  const { data: budgetData, isLoading: budgetsLoading } = useSWR("/api/analytics/budget-vs-actual", fetcher);
+  const { data: budgetData, isLoading: budgetsLoading, mutate } = useSWR("/api/budgets", fetcher);
+  const { data: budgetActualData } = useSWR("/api/analytics/budget-vs-actual", fetcher);
   const { data: categoriesData, isLoading: categoriesLoading } = useSWR("/api/categories", fetcher);
+  const { format } = useCurrency();
+
+  const [deleting, setDeleting] = useState<string | null>(null);
 
   const budgets = budgetData?.budgets || [];
+  const actuals = budgetActualData?.budgets || [];
   const categories = categoriesData?.categories || [];
 
+  // Merge budget data with actuals
   const BUDGETS = budgets.map((b: any) => {
     const cat = categories.find((c: any) => c.id === b.categoryId) || { name: b.categoryId, icon: "category", color: "var(--brand-blue)" };
+    const actual = actuals.find((a: any) => a.budgetId === b.id);
     return {
-      id: b.budgetId,
+      id: b.id,
       name: cat.name,
       icon: cat.icon,
       color: cat.color,
       limit: b.monthlyLimit,
-      spent: b.actualSpend,
+      spent: actual?.actualSpend || 0,
+      month: b.month,
     };
   });
 
@@ -28,6 +38,16 @@ export default function BudgetsPage() {
   const overBudget = BUDGETS.filter((b: any) => b.spent > b.limit);
 
   const isLoading = budgetsLoading || categoriesLoading;
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Delete this budget?")) return;
+    setDeleting(id);
+    try {
+      await fetch(`/api/budgets/${id}`, { method: "DELETE" });
+      mutate();
+    } catch (e) { console.error(e); }
+    setDeleting(null);
+  };
 
   return (
     <div>
@@ -46,15 +66,15 @@ export default function BudgetsPage() {
       <div className="stat-grid reveal" style={{ marginBottom: "var(--gutter)" }}>
         <div className="stat-card card-yellow">
           <div className="stat-card-label">Total Budget</div>
-          <div className="stat-card-value" style={{ fontSize: 26 }}>₹{totalLimit.toLocaleString()}</div>
+          <div className="stat-card-value" style={{ fontSize: 26 }}>{format(totalLimit)}</div>
         </div>
         <div className="stat-card card-pink">
           <div className="stat-card-label">Total Spent</div>
-          <div className="stat-card-value" style={{ fontSize: 26 }}>₹{totalSpent.toLocaleString()}</div>
+          <div className="stat-card-value" style={{ fontSize: 26 }}>{format(totalSpent)}</div>
         </div>
         <div className="stat-card card-green">
           <div className="stat-card-label">Remaining</div>
-          <div className="stat-card-value" style={{ fontSize: 26 }}>₹{(totalLimit - totalSpent).toLocaleString()}</div>
+          <div className="stat-card-value" style={{ fontSize: 26 }}>{format(totalLimit - totalSpent)}</div>
         </div>
         <div className="stat-card" style={{ background: overBudget.length > 0 ? "var(--error-container)" : "var(--brand-green)" }}>
           <div className="stat-card-label">Over Budget</div>
@@ -69,9 +89,10 @@ export default function BudgetsPage() {
           Loading budgets...
         </div>
       ) : BUDGETS.length === 0 ? (
-        <div className="empty-state">
-          <span className="material-symbols-outlined">pie_chart</span>
-          <p>You haven't set up any budgets yet.</p>
+        <div className="card" style={{ textAlign: "center", padding: "3rem" }}>
+          <span className="material-symbols-outlined" style={{ fontSize: 48, color: "var(--outline-variant)", marginBottom: "1rem", display: "block" }}>pie_chart</span>
+          <p style={{ color: "var(--on-surface-variant)", marginBottom: "1rem" }}>You haven't set up any budgets yet.</p>
+          <Link href="/budgets/new" className="btn btn-primary">Create Your First Budget</Link>
         </div>
       ) : (
         <div className="content-grid-3" style={{ marginBottom: "var(--gutter)" }}>
@@ -79,7 +100,7 @@ export default function BudgetsPage() {
             const pct = Math.min((b.spent / b.limit) * 100, 100);
             const over = b.spent > b.limit;
             return (
-              <div key={b.id} className="card reveal" data-delay={`${(i % 3) * 100}` as "100" | "200" | "300"}>
+              <div key={b.id} className="card reveal" data-delay={`${(i % 3) * 100}`}>
                 <div className="flex-between" style={{ marginBottom: "1rem" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
                     <div style={{ width: 40, height: 40, borderRadius: "var(--radius-md)", background: over ? "var(--error-container)" : `${b.color}22`, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -87,11 +108,17 @@ export default function BudgetsPage() {
                     </div>
                     <div>
                       <p style={{ fontSize: 14, fontWeight: 600 }}>{b.name}</p>
+                      <p style={{ fontSize: 11, color: "var(--on-surface-variant)" }}>{b.month}</p>
                       {over && <span className="badge badge-red" style={{ marginTop: 2 }}>Over budget</span>}
                     </div>
                   </div>
-                  <button className="btn btn-ghost btn-icon" aria-label="Edit budget">
-                    <span className="material-symbols-outlined" style={{ fontSize: 16 }}>edit</span>
+                  <button 
+                    className="btn btn-ghost btn-icon" 
+                    onClick={() => handleDelete(b.id)}
+                    disabled={deleting === b.id}
+                    style={{ color: "var(--error)" }}
+                  >
+                    <span className="material-symbols-outlined" style={{ fontSize: 16 }}>delete</span>
                   </button>
                 </div>
 
@@ -102,10 +129,10 @@ export default function BudgetsPage() {
 
                 <div className="flex-between">
                   <span style={{ fontSize: 13, color: "var(--on-surface-variant)" }}>
-                    ₹{b.spent.toLocaleString()} spent
+                    {format(b.spent)} spent
                   </span>
                   <span style={{ fontSize: 13, fontWeight: 600, color: over ? "var(--error)" : "var(--on-surface)" }}>
-                    ₹{b.limit.toLocaleString()} limit
+                    {format(b.limit)} limit
                   </span>
                 </div>
               </div>

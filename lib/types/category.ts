@@ -9,6 +9,7 @@
 export interface Category {
   id:        string;
   name:      string;
+  type:      "income" | "expense";
   icon:      string;      // emoji or icon identifier
   color:     string;      // hex colour, e.g. "#FF6B6B"
   isDefault: boolean;     // true for the 8 seeded defaults — cannot be deleted

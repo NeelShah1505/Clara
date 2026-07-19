@@ -6,6 +6,8 @@
 
 import { z } from "zod/v4";
 
+const CATEGORY_TYPES = ["income", "expense"] as const;
+
 // CSS hex colour: #RGB or #RRGGBB
 const HexColorSchema = z
   .string()
@@ -13,13 +15,15 @@ const HexColorSchema = z
 
 export const CreateCategorySchema = z.object({
   name:  z.string().min(1, "Name is required").max(100),
-  icon:  z.string().min(1, "Icon is required").max(10),
+  type:  z.enum(CATEGORY_TYPES).optional().default("expense"),
+  icon:  z.string().min(1, "Icon is required").max(50),
   color: HexColorSchema,
 });
 
 export const UpdateCategorySchema = z.object({
   name:  z.string().min(1).max(100).optional(),
-  icon:  z.string().min(1).max(10).optional(),
+  type:  z.enum(CATEGORY_TYPES).optional(),
+  icon:  z.string().min(1).max(50).optional(),
   color: HexColorSchema.optional(),
 }).refine(
   (data) => Object.keys(data).length > 0,

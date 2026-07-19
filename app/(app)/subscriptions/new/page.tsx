@@ -11,16 +11,33 @@ export default function NewSubscriptionPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [billingCycle, setBillingCycle] = useState("monthly");
+  const [showCustomCategory, setShowCustomCategory] = useState(false);
+  const [customCatName, setCustomCatName] = useState("");
+  const [creatingCat, setCreatingCat] = useState(false);
 
   const { data: walletData, isLoading: walletsLoading } = useSWR("/api/wallets", fetcher);
-  const { data: catData, isLoading: catLoading } = useSWR("/api/categories", fetcher);
+  const { data: catData, isLoading: catLoading, mutate: mutateCats } = useSWR("/api/categories", fetcher);
   const { data: settingsData } = useSWR("/api/settings", fetcher);
 
   const wallets = walletData?.wallets || [];
-  const allCategories = catData?.categories || [];
-  // Typically subscriptions are expenses, so filter categories to expense
-  const categories = allCategories.filter((c: any) => c.type === "expense");
+  const categories = catData?.categories || [];
   const defaultCurrency = settingsData?.settings?.baseCurrency || "INR";
+
+  const handleCreateCategory = async () => {
+    if (!customCatName.trim()) return;
+    setCreatingCat(true);
+    try {
+      await fetch("/api/categories", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: customCatName.trim(), type: "expense", icon: "category", color: "#64748b" }),
+      });
+      await mutateCats();
+      setShowCustomCategory(false);
+      setCustomCatName("");
+    } catch (e) { console.error(e); }
+    setCreatingCat(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -42,7 +59,7 @@ export default function NewSubscriptionPage() {
     if (billingCycle === "custom") {
       data.customDays = Number(formData.get("customDays"));
       if (!data.customDays || data.customDays <= 0) {
-        setError("Please enter a valid number of days for the custom cycle.");
+        setError("Please enter a valid number of days.");
         setIsSubmitting(false);
         return;
       }
@@ -60,12 +77,10 @@ export default function NewSubscriptionPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-
       if (!res.ok) {
         const result = await res.json();
         throw new Error(result.error || "Failed to create subscription");
       }
-
       router.push("/subscriptions");
     } catch (err: any) {
       setError(err.message);
@@ -96,31 +111,14 @@ export default function NewSubscriptionPage() {
           
           <div className="input-group">
             <label className="input-label" htmlFor="name">Service Name</label>
-            <input 
-              id="name"
-              name="name"
-              type="text" 
-              className="input" 
-              placeholder="e.g. Netflix, Spotify, Gym..."
-              required
-            />
+            <input id="name" name="name" type="text" className="input" placeholder="e.g. Netflix, Spotify, Gym..." required />
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
             <div className="input-group">
               <label className="input-label" htmlFor="amount">Cost</label>
-              <input 
-                id="amount"
-                name="amount"
-                type="number" 
-                step="0.01"
-                min="0.01"
-                className="input" 
-                placeholder="0.00"
-                required
-              />
+              <input id="amount" name="amount" type="number" step="0.01" min="0.01" className="input" placeholder="0.00" required />
             </div>
-            
             <div className="input-group">
               <label className="input-label" htmlFor="currency">Currency</label>
               <select id="currency" name="currency" className="input" required defaultValue={defaultCurrency}>
@@ -135,14 +133,7 @@ export default function NewSubscriptionPage() {
           <div style={{ display: "grid", gridTemplateColumns: billingCycle === "custom" ? "1fr 1fr 1fr" : "1fr 1fr", gap: "1.5rem" }}>
             <div className="input-group">
               <label className="input-label" htmlFor="billingCycle">Billing Cycle</label>
-              <select 
-                id="billingCycle" 
-                name="billingCycle" 
-                className="input" 
-                required 
-                value={billingCycle}
-                onChange={(e) => setBillingCycle(e.target.value)}
-              >
+              <select id="billingCycle" className="input" required value={billingCycle} onChange={(e) => setBillingCycle(e.target.value)}>
                 <option value="weekly">Weekly</option>
                 <option value="monthly">Monthly</option>
                 <option value="quarterly">Quarterly</option>
@@ -150,63 +141,58 @@ export default function NewSubscriptionPage() {
                 <option value="custom">Custom (Days)</option>
               </select>
             </div>
-
             {billingCycle === "custom" && (
               <div className="input-group">
                 <label className="input-label" htmlFor="customDays">Every X Days</label>
-                <input 
-                  id="customDays"
-                  name="customDays"
-                  type="number" 
-                  className="input" 
-                  min="1"
-                  required
-                />
+                <input id="customDays" name="customDays" type="number" className="input" min="1" required />
               </div>
             )}
-
             <div className="input-group">
               <label className="input-label" htmlFor="nextDueDate">Next Due Date</label>
-              <input 
-                id="nextDueDate"
-                name="nextDueDate"
-                type="date" 
-                className="input" 
-                min={todayStr}
-                required
-              />
+              <input id="nextDueDate" name="nextDueDate" type="date" className="input" min={todayStr} required />
             </div>
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
             <div className="input-group">
-              <div className="flex-between" style={{ marginBottom: "0.25rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.25rem" }}>
                 <label className="input-label" htmlFor="categoryId" style={{ marginBottom: 0 }}>Category</label>
-                <Link href="/categories" style={{ fontSize: 12, color: "var(--brand-blue)" }}>Manage Categories</Link>
+                <button type="button" onClick={() => setShowCustomCategory(!showCustomCategory)} style={{ fontSize: 11, color: "var(--brand-blue)", background: "none", border: "none", cursor: "pointer", fontWeight: 600 }}>
+                  + Custom
+                </button>
               </div>
-              <select id="categoryId" name="categoryId" className="input" required disabled={catLoading}>
-                {catLoading ? (
-                  <option value="">Loading categories...</option>
-                ) : categories.length === 0 ? (
-                  <option value="">No expense categories</option>
-                ) : (
-                  categories.map((c: any) => (
-                    <option key={c.id} value={c.id}>{c.icon} {c.name}</option>
-                  ))
-                )}
-              </select>
+              {showCustomCategory ? (
+                <div style={{ display: "flex", gap: "0.5rem" }}>
+                  <input type="text" className="input" placeholder="New category..." value={customCatName} onChange={(e) => setCustomCatName(e.target.value)} style={{ flex: 1 }} />
+                  <button type="button" className="btn btn-primary btn-sm" onClick={handleCreateCategory} disabled={creatingCat}>
+                    {creatingCat ? "..." : "Add"}
+                  </button>
+                </div>
+              ) : (
+                <select id="categoryId" name="categoryId" className="input" required disabled={catLoading}>
+                  {catLoading ? (
+                    <option value="">Loading...</option>
+                  ) : categories.length === 0 ? (
+                    <option value="">No categories</option>
+                  ) : (
+                    categories.map((c: any) => (
+                      <option key={c.id} value={c.id}>{c.icon ? `${c.name}` : c.name}</option>
+                    ))
+                  )}
+                </select>
+              )}
             </div>
 
             <div className="input-group">
-              <label className="input-label" htmlFor="walletId">Payment Method (Wallet)</label>
+              <label className="input-label" htmlFor="walletId">Payment Method</label>
               <select id="walletId" name="walletId" className="input" required disabled={walletsLoading}>
                 {walletsLoading ? (
-                  <option value="">Loading wallets...</option>
+                  <option value="">Loading...</option>
                 ) : wallets.length === 0 ? (
                   <option value="">No wallets available</option>
                 ) : (
                   wallets.map((w: any) => (
-                    <option key={w.id} value={w.id}>{w.name}</option>
+                    <option key={w.id} value={w.id}>{w.name} ({w.type})</option>
                   ))
                 )}
               </select>
@@ -215,13 +201,7 @@ export default function NewSubscriptionPage() {
           
           <div className="input-group">
             <label className="input-label" htmlFor="notes">Notes (Optional)</label>
-            <input 
-              id="notes"
-              name="notes"
-              type="text" 
-              className="input" 
-              placeholder="e.g. Family plan, yearly discount"
-            />
+            <input id="notes" name="notes" type="text" className="input" placeholder="e.g. Family plan, yearly discount" />
           </div>
 
           <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", marginTop: "1rem" }}>

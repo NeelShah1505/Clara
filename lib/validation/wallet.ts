@@ -7,16 +7,6 @@
 
 import { z } from "zod/v4";
 
-const WALLET_TYPES = [
-  "cash",
-  "bank",
-  "upi",
-  "credit_card",
-  "debit_card",
-  "paypal",
-  "crypto",
-] as const;
-
 // ISO 4217 basic check: 3 uppercase letters
 const CurrencySchema = z
   .string()
@@ -25,15 +15,16 @@ const CurrencySchema = z
 
 export const CreateWalletSchema = z.object({
   name:           z.string().min(1, "Name is required").max(100),
-  type:           z.enum(WALLET_TYPES, { error: "Invalid wallet type" }),
+  type:           z.string().min(1, "Type is required").max(50),
   currency:       CurrencySchema,
   openingBalance: z.number().finite().optional().default(0),
 });
 
 export const UpdateWalletSchema = z.object({
   name:     z.string().min(1).max(100).optional(),
-  type:     z.enum(WALLET_TYPES).optional(),
+  type:     z.string().min(1).max(50).optional(),
   currency: CurrencySchema.optional(),
+  balance:  z.number().finite().optional(),
 }).refine(
   (data) => Object.keys(data).length > 0,
   "At least one field must be provided for update"

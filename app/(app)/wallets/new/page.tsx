@@ -3,11 +3,30 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import useSWR from "swr";
+import { fetcher } from "@/lib/utils/fetcher";
+
+const PRESET_TYPES = [
+  { value: "bank", label: "Bank Account" },
+  { value: "cash", label: "Cash Wallet" },
+  { value: "credit_card", label: "Credit Card" },
+  { value: "debit_card", label: "Debit Card" },
+  { value: "upi", label: "UPI / Mobile" },
+  { value: "paypal", label: "PayPal" },
+  { value: "crypto", label: "Crypto" },
+  { value: "savings", label: "Savings Account" },
+  { value: "custom", label: "Other (Custom)" },
+];
 
 export default function NewWalletPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [selectedType, setSelectedType] = useState("bank");
+  const [customType, setCustomType] = useState("");
+
+  const { data: settingsData } = useSWR("/api/settings", fetcher);
+  const defaultCurrency = settingsData?.settings?.baseCurrency || "INR";
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -15,9 +34,17 @@ export default function NewWalletPage() {
     setError("");
 
     const formData = new FormData(e.currentTarget);
+    const walletType = selectedType === "custom" ? customType : selectedType;
+
+    if (!walletType.trim()) {
+      setError("Please enter a wallet type.");
+      setIsSubmitting(false);
+      return;
+    }
+
     const data = {
       name: formData.get("name") as string,
-      type: formData.get("type") as string,
+      type: walletType,
       currency: formData.get("currency") as string,
       openingBalance: Number(formData.get("openingBalance")) || 0,
     };
@@ -63,36 +90,44 @@ export default function NewWalletPage() {
           <div className="input-group">
             <label className="input-label" htmlFor="name">Account Name</label>
             <input 
-              id="name"
-              name="name"
-              type="text" 
-              className="input" 
-              placeholder="e.g. Main Checking, Chase Sapphire..."
-              required
+              id="name" name="name" type="text" className="input" 
+              placeholder="e.g. Main Checking, Chase Sapphire..." required
             />
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
             <div className="input-group">
               <label className="input-label" htmlFor="type">Account Type</label>
-              <select id="type" name="type" className="input" required defaultValue="bank">
-                <option value="bank">Bank Account</option>
-                <option value="cash">Cash Wallet</option>
-                <option value="credit_card">Credit Card</option>
-                <option value="debit_card">Debit Card</option>
-                <option value="upi">UPI / Mobile</option>
-                <option value="paypal">PayPal</option>
-                <option value="crypto">Crypto</option>
+              <select 
+                id="type" className="input" required 
+                value={selectedType}
+                onChange={(e) => setSelectedType(e.target.value)}
+              >
+                {PRESET_TYPES.map(t => (
+                  <option key={t.value} value={t.value}>{t.label}</option>
+                ))}
               </select>
+              {selectedType === "custom" && (
+                <input 
+                  type="text" className="input" placeholder="Enter custom type..."
+                  value={customType} onChange={(e) => setCustomType(e.target.value)}
+                  required style={{ marginTop: "0.5rem" }}
+                />
+              )}
             </div>
             
             <div className="input-group">
               <label className="input-label" htmlFor="currency">Currency</label>
-              <select id="currency" name="currency" className="input" required defaultValue="INR">
+              <select id="currency" name="currency" className="input" required defaultValue={defaultCurrency}>
                 <option value="INR">₹ (INR)</option>
                 <option value="USD">$ (USD)</option>
                 <option value="EUR">€ (EUR)</option>
                 <option value="GBP">£ (GBP)</option>
+                <option value="JPY">¥ (JPY)</option>
+                <option value="AED">د.إ (AED)</option>
+                <option value="SGD">S$ (SGD)</option>
+                <option value="AUD">A$ (AUD)</option>
+                <option value="CAD">C$ (CAD)</option>
               </select>
             </div>
           </div>
@@ -100,12 +135,8 @@ export default function NewWalletPage() {
           <div className="input-group">
             <label className="input-label" htmlFor="openingBalance">Opening Balance</label>
             <input 
-              id="openingBalance"
-              name="openingBalance"
-              type="number" 
-              step="0.01"
-              className="input" 
-              placeholder="0.00"
+              id="openingBalance" name="openingBalance" type="number" step="0.01"
+              className="input" placeholder="0.00"
             />
             <p style={{ fontSize: 12, color: "var(--on-surface-variant)", marginTop: "0.5rem" }}>
               Leave blank if 0. Negative balances are allowed for credit cards.

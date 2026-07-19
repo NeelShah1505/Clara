@@ -84,12 +84,19 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       .get();
 
     if (!existing.empty) {
-      return NextResponse.json(
-        {
-          error: `A budget for category "${categoryId}" in ${month} already exists. Use PATCH to update it.`,
-        },
-        { status: 409 }
-      );
+      // Upsert: update the existing budget's limit instead of failing
+      const existingDoc = existing.docs[0];
+      await existingDoc.ref.update({ monthlyLimit, updatedAt: FieldValue.serverTimestamp() });
+      return NextResponse.json({
+        budget: {
+          id: existingDoc.id,
+          categoryId,
+          monthlyLimit,
+          month,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        } satisfies Budget,
+      });
     }
 
     // Verify the category exists

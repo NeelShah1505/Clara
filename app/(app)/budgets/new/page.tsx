@@ -11,8 +11,10 @@ export default function NewBudgetPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  const { data, isLoading: categoriesLoading } = useSWR("/api/categories", fetcher);
-  const categories = data?.categories || [];
+  const { data: catData, isLoading: catsLoading } = useSWR("/api/categories", fetcher, { revalidateOnFocus: true });
+  const categories = (catData?.categories || []).filter((c: any) => c.type === "expense");
+
+  const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -20,13 +22,13 @@ export default function NewBudgetPage() {
     setError("");
 
     const formData = new FormData(e.currentTarget);
-    const budgetData = {
+    const data = {
       categoryId: formData.get("categoryId") as string,
       monthlyLimit: Number(formData.get("monthlyLimit")),
       month: formData.get("month") as string,
     };
 
-    if (!budgetData.categoryId) {
+    if (!data.categoryId) {
       setError("Please select a category.");
       setIsSubmitting(false);
       return;
@@ -36,7 +38,7 @@ export default function NewBudgetPage() {
       const res = await fetch("/api/budgets", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(budgetData),
+        body: JSON.stringify(data),
       });
 
       if (!res.ok) {
@@ -58,7 +60,7 @@ export default function NewBudgetPage() {
           <span className="material-symbols-outlined">arrow_back</span>
         </Link>
         <h1>Create Budget</h1>
-        <p>Set a spending limit for a specific category.</p>
+        <p>Set a monthly spending limit for a category.</p>
       </div>
 
       <div className="card reveal">
@@ -72,43 +74,36 @@ export default function NewBudgetPage() {
           
           <div className="input-group">
             <label className="input-label" htmlFor="categoryId">Category</label>
-            <select id="categoryId" name="categoryId" className="input" required disabled={categoriesLoading}>
-              {categoriesLoading ? (
+            <select id="categoryId" name="categoryId" className="input" required disabled={catsLoading}>
+              {catsLoading ? (
                 <option value="">Loading categories...</option>
               ) : categories.length === 0 ? (
-                <option value="">No categories available</option>
+                <option value="">No expense categories</option>
               ) : (
-                categories.map((c: any) => (
-                  <option key={c.id} value={c.id}>{c.icon} {c.name}</option>
-                ))
+                <>
+                  <option value="">Select a category</option>
+                  {categories.map((c: any) => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
+                  ))}
+                </>
               )}
             </select>
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
             <div className="input-group">
-              <label className="input-label" htmlFor="monthlyLimit">Monthly Limit (₹)</label>
+              <label className="input-label" htmlFor="monthlyLimit">Monthly Limit</label>
               <input 
-                id="monthlyLimit"
-                name="monthlyLimit"
-                type="number" 
-                step="1"
-                min="1"
-                className="input" 
-                placeholder="0.00"
-                required
+                id="monthlyLimit" name="monthlyLimit" type="number" step="0.01" min="1"
+                className="input" placeholder="e.g. 5000" required
               />
             </div>
             
             <div className="input-group">
               <label className="input-label" htmlFor="month">Month</label>
               <input 
-                id="month"
-                name="month"
-                type="month" 
-                className="input" 
-                required
-                defaultValue={new Date().toISOString().slice(0, 7)}
+                id="month" name="month" type="month" className="input" 
+                required defaultValue={currentMonth}
               />
             </div>
           </div>

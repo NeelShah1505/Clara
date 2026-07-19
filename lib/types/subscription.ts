@@ -13,7 +13,7 @@
  * service name that appears in the "Active Subscriptions" dashboard widget.
  */
 
-export type BillingCycle = "weekly" | "monthly" | "quarterly" | "yearly";
+export type BillingCycle = "weekly" | "monthly" | "quarterly" | "yearly" | "custom";
 
 /** Full subscription document shape (Firestore doc + id). */
 export interface Subscription {
@@ -28,6 +28,7 @@ export interface Subscription {
   walletId:     string;
   active:       boolean;
   notes:        string;
+  customDays?:  number;
   createdAt:    string;
   updatedAt:    string;
 }
@@ -42,6 +43,7 @@ export interface CreateSubscriptionInput {
   categoryId:   string;
   walletId:     string;
   notes?:       string;
+  customDays?:  number;
 }
 
 /** Body accepted by PATCH /api/subscriptions/:id */

@@ -28,7 +28,7 @@ export default function SubscriptionsPage() {
   });
 
   const isLoading = subLoading || catLoading;
-  const monthlyTotal = SUBS.reduce((acc, s) => acc + (s.cycle === "Monthly" ? s.cost : s.cost / 12), 0);
+  const monthlyTotal = SUBS.reduce((acc: number, s: any) => acc + (s.cycle === "Monthly" ? s.cost : s.cost / 12), 0);
   const yearlyTotal = monthlyTotal * 12;
 
   return (

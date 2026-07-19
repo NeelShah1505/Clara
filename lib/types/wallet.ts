@@ -12,7 +12,9 @@ export type WalletType =
   | "credit_card"
   | "debit_card"
   | "paypal"
-  | "crypto";
+  | "crypto"
+  | "savings"
+  | (string & {});  // allow custom wallet types
 
 /** Shape of a wallet document as stored in Firestore + client ID field. */
 export interface Wallet {
