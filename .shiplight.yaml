@@ -1,0 +1,32 @@
+---
+project: personal-expense-tracker
+version: 1.0.0
+
+scenarios:
+  - name: Dashboard Visual Validation
+    description: Verifies the dashboard layout and widgets render correctly.
+    url: "/"
+    actions:
+      - wait: 2000
+    visualValidation:
+      enabled: true
+      strict: true
+      ignoreDynamicData: true
+
+  - name: Budget vs Actual Visual Validation
+    description: Verifies that the budget vs actual charts render correctly without 500 errors.
+    url: "/budgets"
+    actions:
+      - wait: 2000
+    visualValidation:
+      enabled: true
+      strict: true
+
+  - name: Transactions Table Visual Validation
+    description: Validates the transaction layout and data grid.
+    url: "/transactions"
+    actions:
+      - wait: 2000
+    visualValidation:
+      enabled: true
+      strict: true

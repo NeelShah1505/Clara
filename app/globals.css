@@ -3,8 +3,7 @@
    Source of truth: design/stitch_personal_finance_tracker_pro/intelly_finance/DESIGN.md
    ───────────────────────────────────────────────────────────────────────────── */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block');
+/* Fonts are now loaded optimally via next/font in layout.tsx */
 
 /* ── Reset ──────────────────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; padding: 0; margin: 0; }
@@ -423,3 +422,16 @@ body {
 .gap-lg { gap: var(--stack-lg); }
 .hover-bg-container-low:hover { background: var(--surface-container-low) !important; }
 .hover-transform-up:hover { transform: translateY(-2px) !important; }
+
+/* Skeleton Loading Animation */
+.skeleton {
+  background: linear-gradient(90deg, var(--surface-variant) 25%, rgba(0,0,0,0.05) 50%, var(--surface-variant) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

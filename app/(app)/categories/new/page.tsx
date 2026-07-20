@@ -3,11 +3,35 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { mutate } from "swr";
 
 export default function NewCategoryPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [iconValue, setIconValue] = useState("category");
+  const [showPicker, setShowPicker] = useState(false);
+
+  const EMOJIS = [
+    // Essentials & Finance
+    "💰", "💳", "📈", "📉", "🏦", "💎", "🧾", "🪙", "💸",
+    // Food & Drink
+    "🍔", "🍕", "☕", "🍷", "🍹", "🥑", "🥐", "🍩", "🍎", "🥦", "🥩", "🍣", "🍱",
+    // Shopping & Retail
+    "🛒", "🛍️", "👗", "👞", "💄", "💍", "📱", "💻", "⌚", "🎁", "🧸", "📚",
+    // Transport & Travel
+    "🚗", "✈️", "🚌", "🚆", "🚲", "⛵", "🚀", "⛽", "🏨", "🏖️", "🗺️", "🏕️",
+    // Home & Lifestyle
+    "🏠", "🛋️", "🪴", "🧹", "🧻", "🚿", "🛁", "🔑", "🛠️", "🧰", "🧺", "🗑️",
+    // Health & Wellness
+    "🏥", "💊", "🩹", "🩺", "🏋️", "🧘", "🏃", "💆", "💈", "💅", "🦷", "🧠",
+    // Entertainment & Leisure
+    "🎮", "🎬", "🎫", "🎸", "🎧", "🎨", "⚽", "🎾", "🎳", "🎭", "📸", "🎢",
+    // Work & Education
+    "💼", "🎓", "🖋️", "📎", "📊", "📁", "🏫", "🔬", "📡", "🔋",
+    // Misc
+    "⚡", "💧", "🔥", "🐶", "🐱", "🐾", "🎉", "🎈", "🍼", "🎀", "🛡️", "🔮"
+  ];
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -18,7 +42,7 @@ export default function NewCategoryPage() {
     const data = {
       name: formData.get("name") as string,
       type: formData.get("type") as string,
-      icon: formData.get("icon") as string,
+      icon: iconValue,
       color: formData.get("color") as string,
     };
 
@@ -34,6 +58,9 @@ export default function NewCategoryPage() {
         throw new Error(result.error || "Failed to create category");
       }
 
+      // Invalidate the categories cache globally before routing
+      await mutate("/api/categories");
+      
       router.push("/categories");
     } catch (err: any) {
       setError(err.message);
@@ -76,19 +103,38 @@ export default function NewCategoryPage() {
             </div>
           </div>          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
             <div className="input-group">
-              <label className="input-label" htmlFor="icon">Material Icon Name</label>
-              <input 
-                id="icon"
-                name="icon"
-                type="text" 
-                className="input" 
-                placeholder="e.g. stars, pet_supplies..."
-                defaultValue="category"
-                required
-              />
-              <p style={{ fontSize: 12, color: "var(--on-surface-variant)", marginTop: "0.5rem" }}>
-                Find names at <a href="https://fonts.google.com/icons" target="_blank" rel="noreferrer" style={{color: "var(--brand-blue)"}}>Google Fonts</a>.
-              </p>
+              <label className="input-label">Category Icon</label>
+              <input type="hidden" name="icon" value={iconValue} />
+              
+              <div style={{ 
+                display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: "0.25rem", 
+                padding: "0.75rem", background: "var(--surface-variant)", 
+                borderRadius: "var(--radius-md)", border: "1px solid var(--border-color)",
+                maxHeight: 200, overflowY: "auto"
+              }}>
+                {EMOJIS.map(emoji => (
+                  <button
+                    key={emoji}
+                    type="button"
+                    onClick={() => setIconValue(emoji)}
+                    style={{
+                      fontSize: "1.5rem",
+                      padding: "0.5rem",
+                      border: "none",
+                      background: iconValue === emoji ? "var(--brand-blue)" : "transparent",
+                      color: iconValue === emoji ? "#fff" : "inherit",
+                      borderRadius: "0.5rem",
+                      cursor: "pointer",
+                      transition: "0.1s",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center"
+                    }}
+                  >
+                    {emoji}
+                  </button>
+                ))}
+              </div>
             </div>
             
             <div className="input-group">

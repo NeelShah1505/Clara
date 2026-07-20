@@ -30,6 +30,10 @@ export default function SettingsPage() {
       weeklyReport: formData.get("weeklyReport") === "on",
       dateFormat: formData.get("dateFormat") as string,
       defaultWalletView: formData.get("defaultWalletView") as string,
+      claraEnabled: formData.get("claraEnabled") === "on",
+      claraApiKey: formData.get("claraApiKey") as string,
+      claraMcpUrl: formData.get("claraMcpUrl") as string,
+      calendarSyncEnabled: formData.get("calendarSyncEnabled") === "on",
     };
 
     try {
@@ -67,10 +71,6 @@ export default function SettingsPage() {
 
   return (
     <div style={{ maxWidth: 800 }}>
-      <div className="page-header">
-        <h1>Settings</h1>
-        <p>Manage your account preferences and personal details</p>
-      </div>
 
       {/* Toast */}
       {message && (
@@ -152,6 +152,7 @@ export default function SettingsPage() {
           </div>
         </div>
 
+        {/* AI & Integrations moved to /settings/integrations */}
         {/* ── Preferences Section ──────────────────────────────────────────── */}
         <div className="card reveal" data-delay="200">
           <h2 className="text-headline-sm" style={{ marginBottom: "1.5rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>

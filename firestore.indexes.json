@@ -96,6 +96,15 @@
         { "fieldPath": "date",       "order": "DESCENDING" }
       ]
     },
+    {
+      "collectionGroup": "transactions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "categoryId", "order": "ASCENDING"  },
+        { "fieldPath": "type",       "order": "ASCENDING"  },
+        { "fieldPath": "date",       "order": "ASCENDING" }
+      ]
+    },
     // Used by: budget uniqueness check — query (categoryId, month) in POST /api/budgets
     {
       "collectionGroup": "budgets",

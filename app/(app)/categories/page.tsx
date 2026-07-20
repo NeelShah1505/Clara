@@ -59,8 +59,20 @@ export default function CategoriesPage() {
                 background: `${c.color}22`, 
                 display: "flex", alignItems: "center", justifyContent: "center",
                 flexShrink: 0,
+                overflow: "hidden"
               }}>
-                <span className="material-symbols-outlined" style={{ fontSize: 26, color: c.color }}>{c.icon}</span>
+                {(c.icon && (c.icon.codePointAt(0) || 0) > 255) ? (
+                  <span style={{ fontSize: 26 }}>{c.icon}</span>
+                ) : (
+                  <span style={{ 
+                    fontSize: 22, 
+                    fontWeight: 700,
+                    color: c.color,
+                    textTransform: "uppercase"
+                  }}>
+                    {c.name ? c.name.charAt(0).toUpperCase() : "?"}
+                  </span>
+                )}
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <p style={{ fontWeight: 600, fontSize: 15, marginBottom: 4 }}>{c.name}</p>
@@ -113,10 +125,23 @@ export default function CategoriesPage() {
         </Link>
       </div>
 
-      {isLoading ? (
-        <div style={{ padding: "3rem 0", textAlign: "center" }}>
-          <div className="spinner" style={{ margin: "0 auto 1rem" }} />
-          <p style={{ color: "var(--on-surface-variant)", fontSize: 14 }}>Loading categories...</p>
+      {isLoading && !data ? (
+        <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+          <div>
+            <div className="skeleton" style={{ height: 32, width: 200, marginBottom: "1rem" }} />
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1rem" }}>
+              <div className="skeleton" style={{ height: 80, borderRadius: "var(--radius-md)" }} />
+              <div className="skeleton" style={{ height: 80, borderRadius: "var(--radius-md)" }} />
+              <div className="skeleton" style={{ height: 80, borderRadius: "var(--radius-md)" }} />
+            </div>
+          </div>
+          <div>
+            <div className="skeleton" style={{ height: 32, width: 200, marginBottom: "1rem" }} />
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1rem" }}>
+              <div className="skeleton" style={{ height: 80, borderRadius: "var(--radius-md)" }} />
+              <div className="skeleton" style={{ height: 80, borderRadius: "var(--radius-md)" }} />
+            </div>
+          </div>
         </div>
       ) : error ? (
         <div style={{ padding: "3rem", textAlign: "center", color: "var(--error)" }}>

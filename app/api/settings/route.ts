@@ -22,7 +22,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       name: userRecord.displayName || "",
       email: userRecord.email || "",
       profilePic: userRecord.photoURL || "",
-    }; 
+      claraEnabled: false,
+      claraApiKey: "",
+      claraMcpUrl: "",
+      calendarSyncEnabled: false,
+      webhookUrl: "",
+    };
 
     if (doc.exists) {
       settings = { ...settings, ...doc.data() };
@@ -31,7 +36,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ settings });
   } catch (err) {
     console.error("[GET /api/settings]", err);
-    return NextResponse.json({ settings: { baseCurrency: "INR", displayCurrency: "INR" } }); 
+    return NextResponse.json({ settings: { baseCurrency: "INR", displayCurrency: "INR", claraEnabled: false, claraApiKey: "", claraMcpUrl: "" } }); 
   }
 }
 
@@ -51,6 +56,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       name: body.name || "",
       email: body.email || "",
       profilePic: body.profilePic || "",
+      claraEnabled: body.claraEnabled === true,
+      claraApiKey: body.claraApiKey || "",
+      claraMcpUrl: body.claraMcpUrl || "",
+      calendarSyncEnabled: body.calendarSyncEnabled === true,
+      webhookUrl: body.webhookUrl || "",
     };
 
     await ref.set(updateData, { merge: true });

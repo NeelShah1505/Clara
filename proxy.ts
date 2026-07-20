@@ -95,7 +95,7 @@ function readAdminClaimUnsafe(sessionCookie: string): boolean {
 
 // ── Middleware ─────────────────────────────────────────────────────────────────
 
-export async function middleware(request: NextRequest): Promise<NextResponse> {
+export async function proxy(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
 
   // ── 1. IP rate limiting ────────────────────────────────────────────────────
