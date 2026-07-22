@@ -12,25 +12,25 @@ export default function NewCategoryPage() {
   const [iconValue, setIconValue] = useState("category");
   const [showPicker, setShowPicker] = useState(false);
 
-  const EMOJIS = [
-    // Essentials & Finance
-    "💰", "💳", "📈", "📉", "🏦", "💎", "🧾", "🪙", "💸",
-    // Food & Drink
-    "🍔", "🍕", "☕", "🍷", "🍹", "🥑", "🥐", "🍩", "🍎", "🥦", "🥩", "🍣", "🍱",
+  const MATERIAL_ICONS = [
+    // Finance & Essentials
+    "account_balance", "account_balance_wallet", "credit_card", "payments", "savings", "trending_up", "trending_down", "receipt",
+    // Food & Dining
+    "restaurant", "local_dining", "local_cafe", "local_bar", "fastfood", "local_pizza", "bakery_dining", "liquor",
     // Shopping & Retail
-    "🛒", "🛍️", "👗", "👞", "💄", "💍", "📱", "💻", "⌚", "🎁", "🧸", "📚",
+    "shopping_cart", "shopping_bag", "store", "checkroom", "inventory", "local_mall", "redeem", "card_giftcard",
     // Transport & Travel
-    "🚗", "✈️", "🚌", "🚆", "🚲", "⛵", "🚀", "⛽", "🏨", "🏖️", "🗺️", "🏕️",
-    // Home & Lifestyle
-    "🏠", "🛋️", "🪴", "🧹", "🧻", "🚿", "🛁", "🔑", "🛠️", "🧰", "🧺", "🗑️",
+    "directions_car", "flight", "directions_bus", "train", "pedal_bike", "local_gas_station", "hotel", "explore",
+    // Home & Utilities
+    "home", "chair", "cleaning_services", "water_drop", "bolt", "wifi", "build", "delete",
     // Health & Wellness
-    "🏥", "💊", "🩹", "🩺", "🏋️", "🧘", "🏃", "💆", "💈", "💅", "🦷", "🧠",
+    "local_hospital", "medical_services", "favorite", "fitness_center", "self_improvement", "spa", "content_cut", "psychology",
     // Entertainment & Leisure
-    "🎮", "🎬", "🎫", "🎸", "🎧", "🎨", "⚽", "🎾", "🎳", "🎭", "📸", "🎢",
+    "sports_esports", "movie", "confirmation_number", "sports_bar", "headphones", "palette", "sports_soccer", "attractions",
     // Work & Education
-    "💼", "🎓", "🖋️", "📎", "📊", "📁", "🏫", "🔬", "📡", "🔋",
+    "work", "school", "menu_book", "analytics", "computer", "satellite_alt", "battery_charging_full", "business_center",
     // Misc
-    "⚡", "💧", "🔥", "🐶", "🐱", "🐾", "🎉", "🎈", "🍼", "🎀", "🛡️", "🔮"
+    "pets", "celebration", "child_friendly", "security", "diamond", "verified", "star", "campaign"
   ];
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -107,22 +107,21 @@ export default function NewCategoryPage() {
               <input type="hidden" name="icon" value={iconValue} />
               
               <div style={{ 
-                display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: "0.25rem", 
+                display: "grid", gridTemplateColumns: "repeat(8, 1fr)", gap: "0.25rem", 
                 padding: "0.75rem", background: "var(--surface-variant)", 
                 borderRadius: "var(--radius-md)", border: "1px solid var(--border-color)",
-                maxHeight: 200, overflowY: "auto"
+                maxHeight: 240, overflowY: "auto"
               }}>
-                {EMOJIS.map(emoji => (
+                {MATERIAL_ICONS.map(icon => (
                   <button
-                    key={emoji}
+                    key={icon}
                     type="button"
-                    onClick={() => setIconValue(emoji)}
+                    onClick={() => setIconValue(icon)}
                     style={{
-                      fontSize: "1.5rem",
                       padding: "0.5rem",
                       border: "none",
-                      background: iconValue === emoji ? "var(--brand-blue)" : "transparent",
-                      color: iconValue === emoji ? "#fff" : "inherit",
+                      background: iconValue === icon ? "var(--brand-blue)" : "transparent",
+                      color: iconValue === icon ? "#fff" : "inherit",
                       borderRadius: "0.5rem",
                       cursor: "pointer",
                       transition: "0.1s",
@@ -130,8 +129,9 @@ export default function NewCategoryPage() {
                       alignItems: "center",
                       justifyContent: "center"
                     }}
+                    title={icon}
                   >
-                    {emoji}
+                    <span className="material-symbols-outlined" style={{ fontSize: "1.5rem" }}>{icon}</span>
                   </button>
                 ))}
               </div>

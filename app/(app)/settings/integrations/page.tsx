@@ -27,6 +27,13 @@ export default function IntegrationsSettingsPage() {
       webhookUrl: formData.get("webhookUrl") as string,
     };
 
+    if (updateData.claraEnabled && !updateData.claraApiKey.trim()) {
+      alert("Please generate an API key to enable the Clara AI assistant.");
+      document.getElementById("claraApiKey")?.focus();
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const res = await fetch("/api/settings", {
         method: "POST",

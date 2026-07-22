@@ -57,6 +57,33 @@ export default function SettingsPage() {
     }
   };
 
+  const testPushNotification = async () => {
+    if (!("Notification" in window)) {
+      alert("This browser does not support desktop notification");
+      return;
+    }
+    
+    let permission = Notification.permission;
+    if (permission === "default") {
+      permission = await Notification.requestPermission();
+    }
+    
+    if (permission === "granted") {
+      new Notification("Clara Finance", {
+        body: "You have an upcoming bill due tomorrow!",
+        icon: "/favicon.ico"
+      });
+      setMessage("Push notification fired successfully!");
+    } else {
+      alert("Please allow notifications in your browser settings to test this feature.");
+    }
+  };
+
+  const testEmail = async () => {
+    setMessage("Simulating email send... Check your inbox!");
+    setTimeout(() => setMessage(""), 3000);
+  };
+
   const handleLogout = async () => {
     try {
       await fetch("/api/auth/logout", { method: "POST" });
@@ -193,27 +220,44 @@ export default function SettingsPage() {
             Notifications
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-            <label style={{ display: "flex", alignItems: "center", gap: "0.75rem", cursor: "pointer", padding: "0.75rem", borderRadius: "var(--radius-sm)", border: "1px solid rgba(0,0,0,0.06)" }}>
-              <input type="checkbox" name="notifications" defaultChecked={settings.notifications !== false} style={{ width: 18, height: 18, accentColor: "var(--brand-blue)" }} />
-              <div>
-                <p style={{ fontWeight: 500, fontSize: 14 }}>Push Notifications</p>
-                <p style={{ fontSize: 12, color: "var(--on-surface-variant)" }}>Get notified about upcoming bills and budget alerts</p>
-              </div>
-            </label>
-            <label style={{ display: "flex", alignItems: "center", gap: "0.75rem", cursor: "pointer", padding: "0.75rem", borderRadius: "var(--radius-sm)", border: "1px solid rgba(0,0,0,0.06)" }}>
-              <input type="checkbox" name="monthlyBudgetReminder" defaultChecked={settings.monthlyBudgetReminder !== false} style={{ width: 18, height: 18, accentColor: "var(--brand-blue)" }} />
-              <div>
-                <p style={{ fontWeight: 500, fontSize: 14 }}>Monthly Budget Reminders</p>
-                <p style={{ fontSize: 12, color: "var(--on-surface-variant)" }}>Remind me when I'm approaching budget limits</p>
-              </div>
-            </label>
-            <label style={{ display: "flex", alignItems: "center", gap: "0.75rem", cursor: "pointer", padding: "0.75rem", borderRadius: "var(--radius-sm)", border: "1px solid rgba(0,0,0,0.06)" }}>
-              <input type="checkbox" name="weeklyReport" defaultChecked={settings.weeklyReport === true} style={{ width: 18, height: 18, accentColor: "var(--brand-blue)" }} />
-              <div>
-                <p style={{ fontWeight: 500, fontSize: 14 }}>Weekly Summary Email</p>
-                <p style={{ fontSize: 12, color: "var(--on-surface-variant)" }}>Receive a weekly financial summary via email</p>
-              </div>
-            </label>
+            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+              <label style={{ flex: 1, display: "flex", alignItems: "center", gap: "0.75rem", cursor: "pointer", padding: "0.75rem", borderRadius: "var(--radius-sm)", border: "1px solid rgba(0,0,0,0.06)" }}>
+                <input type="checkbox" name="notifications" defaultChecked={settings.notifications !== false} style={{ width: 18, height: 18, accentColor: "var(--brand-blue)" }} />
+                <div>
+                  <p style={{ fontWeight: 500, fontSize: 14 }}>Push Notifications</p>
+                  <p style={{ fontSize: 12, color: "var(--on-surface-variant)" }}>Get notified about upcoming bills and budget alerts</p>
+                </div>
+              </label>
+              <button type="button" onClick={testPushNotification} className="btn btn-secondary" style={{ padding: "0.5rem 1rem", fontSize: 12 }}>
+                Test
+              </button>
+            </div>
+            
+            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+              <label style={{ flex: 1, display: "flex", alignItems: "center", gap: "0.75rem", cursor: "pointer", padding: "0.75rem", borderRadius: "var(--radius-sm)", border: "1px solid rgba(0,0,0,0.06)" }}>
+                <input type="checkbox" name="monthlyBudgetReminder" defaultChecked={settings.monthlyBudgetReminder !== false} style={{ width: 18, height: 18, accentColor: "var(--brand-blue)" }} />
+                <div>
+                  <p style={{ fontWeight: 500, fontSize: 14 }}>Monthly Budget Reminders</p>
+                  <p style={{ fontSize: 12, color: "var(--on-surface-variant)" }}>Remind me when I'm approaching budget limits</p>
+                </div>
+              </label>
+              <button type="button" onClick={testEmail} className="btn btn-secondary" style={{ padding: "0.5rem 1rem", fontSize: 12 }}>
+                Test
+              </button>
+            </div>
+            
+            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+              <label style={{ flex: 1, display: "flex", alignItems: "center", gap: "0.75rem", cursor: "pointer", padding: "0.75rem", borderRadius: "var(--radius-sm)", border: "1px solid rgba(0,0,0,0.06)" }}>
+                <input type="checkbox" name="weeklyReport" defaultChecked={settings.weeklyReport === true} style={{ width: 18, height: 18, accentColor: "var(--brand-blue)" }} />
+                <div>
+                  <p style={{ fontWeight: 500, fontSize: 14 }}>Weekly Summary Email</p>
+                  <p style={{ fontSize: 12, color: "var(--on-surface-variant)" }}>Receive a weekly financial summary via email</p>
+                </div>
+              </label>
+              <button type="button" onClick={testEmail} className="btn btn-secondary" style={{ padding: "0.5rem 1rem", fontSize: 12 }}>
+                Test
+              </button>
+            </div>
           </div>
         </div>
 

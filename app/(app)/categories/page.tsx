@@ -63,6 +63,8 @@ export default function CategoriesPage() {
               }}>
                 {(c.icon && (c.icon.codePointAt(0) || 0) > 255) ? (
                   <span style={{ fontSize: 26 }}>{c.icon}</span>
+                ) : (c.icon && /^[a-z_]+$/.test(c.icon) && c.icon.length > 2) ? (
+                  <span className="material-symbols-outlined" style={{ fontSize: 26, color: c.color, maxWidth: "100%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.icon}</span>
                 ) : (
                   <span style={{ 
                     fontSize: 22, 
