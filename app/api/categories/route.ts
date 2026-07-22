@@ -24,7 +24,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       .orderBy("name", "asc")
       .get();
 
-    let categories: Category[] = snapshot.docs.map((doc) => {
+    const categories: Category[] = snapshot.docs.map((doc) => {
       const d = doc.data();
       return {
         id:        doc.id,

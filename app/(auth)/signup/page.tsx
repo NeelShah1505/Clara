@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signUpWithEmail, signInWithGoogle } from "@/lib/firebase/auth";
 
-export default function SignupPage() {
+function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -35,7 +35,6 @@ export default function SignupPage() {
       const form = e.target as HTMLFormElement;
       const email = (form.elements.namedItem("signup-email") as HTMLInputElement).value;
       const password = (form.elements.namedItem("signup-password") as HTMLInputElement).value;
-      const name = (form.elements.namedItem("signup-name") as HTMLInputElement).value;
       
       const user = await signUpWithEmail(email, password);
       // Wait, we can't create a session yet because email isn't verified.
@@ -64,7 +63,7 @@ export default function SignupPage() {
   }
 
   return (
-    <div style={{ animation: "fadeInUp 0.4s var(--ease-out-expo) both" }}>
+    <>
       <div style={{ marginBottom: "2rem" }}>
         <h1 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: "0.375rem", color: "var(--on-surface)" }}>
           Create Account
@@ -177,6 +176,16 @@ export default function SignupPage() {
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes fadeInUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
       `}</style>
+    </>
+  );
+}
+
+export default function SignupPage() {
+  return (
+    <div style={{ animation: "fadeInUp 0.4s var(--ease-out-expo) both" }}>
+      <Suspense fallback={<div>Loading...</div>}>
+        <SignupForm />
+      </Suspense>
     </div>
   );
 }

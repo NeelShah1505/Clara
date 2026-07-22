@@ -1,14 +1,11 @@
 "use client";
 
-import type { Metadata } from "next";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signInWithEmail, signInWithGoogle } from "@/lib/firebase/auth";
 
-// export const metadata: Metadata = { title: "Log in" }; // client component — use generateMetadata in a parent
-
-export default function LoginPage() {
+function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -61,7 +58,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{ animation: "fadeInUp 0.4s var(--ease-out-expo) both" }}>
+    <>
       <div style={{ marginBottom: "2rem" }}>
         <h1 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: "0.375rem", color: "var(--on-surface)" }}>
           Welcome back
@@ -160,6 +157,16 @@ export default function LoginPage() {
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes fadeInUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
       `}</style>
+    </>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <div style={{ animation: "fadeInUp 0.4s var(--ease-out-expo) both" }}>
+      <Suspense fallback={<div>Loading...</div>}>
+        <LoginForm />
+      </Suspense>
     </div>
   );
 }
