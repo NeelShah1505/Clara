@@ -140,7 +140,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const walletRef = db.doc(`users/${uid}/wallets/${input.walletId}`);
 
     const txRef = db.collection(`users/${uid}/transactions`).doc();
-    let createdAt = new Date().toISOString();
+    const createdAt = new Date().toISOString();
 
     // ── Atomic write: transaction doc + wallet balance update ────────────────
     await db.runTransaction(async (firestoreTx) => {
