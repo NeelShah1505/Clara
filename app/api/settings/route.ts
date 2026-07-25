@@ -25,6 +25,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       claraEnabled: false,
       claraApiKey: "",
       claraMcpUrl: "",
+      geminiApiKey: "",
       calendarSyncEnabled: false,
       webhookUrl: "",
     };
@@ -59,6 +60,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       claraEnabled: body.claraEnabled === true,
       claraApiKey: body.claraApiKey || "",
       claraMcpUrl: body.claraMcpUrl || "",
+      geminiApiKey: body.geminiApiKey || "",
       calendarSyncEnabled: body.calendarSyncEnabled === true,
       webhookUrl: body.webhookUrl || "",
     };

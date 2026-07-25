@@ -23,13 +23,14 @@ export default function IntegrationsSettingsPage() {
       claraEnabled: formData.get("claraEnabled") === "on",
       claraApiKey: formData.get("claraApiKey") as string,
       claraMcpUrl: formData.get("claraMcpUrl") as string,
+      geminiApiKey: formData.get("geminiApiKey") as string,
       calendarSyncEnabled: formData.get("calendarSyncEnabled") === "on",
       webhookUrl: formData.get("webhookUrl") as string,
     };
 
-    if (updateData.claraEnabled && !updateData.claraApiKey.trim()) {
-      alert("Please generate an API key to enable the Clara AI assistant.");
-      document.getElementById("claraApiKey")?.focus();
+    if (updateData.claraEnabled && !updateData.claraApiKey?.trim() && !updateData.geminiApiKey?.trim()) {
+      alert("Please generate or enter an API key to enable the Clara AI assistant.");
+      document.getElementById("geminiApiKey")?.focus() || document.getElementById("claraApiKey")?.focus();
       setIsSubmitting(false);
       return;
     }
@@ -83,9 +84,23 @@ export default function IntegrationsSettingsPage() {
               <input type="checkbox" name="claraEnabled" defaultChecked={settings.claraEnabled === true} style={{ width: 18, height: 18, accentColor: "var(--brand-purple)" }} />
               <div>
                 <p style={{ fontWeight: 500, fontSize: 14 }}>Enable Clara Assistant</p>
-                <p style={{ fontSize: 12, color: "var(--on-surface-variant)" }}>Floating AI analyst to provide insights and answer questions on all pages.</p>
+                <p style={{ fontSize: 12, color: "var(--on-surface-variant)" }}>Floating AI analyst to provide insights and execute real-time actions across all pages.</p>
               </div>
             </label>
+            <div className="input-group">
+              <label className="input-label" htmlFor="geminiApiKey" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <span className="material-symbols-outlined" style={{ fontSize: 16, color: "var(--brand-purple)" }}>key</span>
+                AI Provider API Key (Google Gemini / OpenAI)
+              </label>
+              <input 
+                id="geminiApiKey" name="geminiApiKey" type="password" className="input" 
+                defaultValue={settings.geminiApiKey || ""} placeholder="AIza... or sk-..." 
+                style={{ fontFamily: "monospace" }}
+              />
+              <p style={{ fontSize: 12, color: "var(--on-surface-variant)", marginTop: "0.4rem" }}>
+                Required for real-time AI conversation and automated financial actions (CRUD operations). Your key is stored securely in your private Firestore database.
+              </p>
+            </div>
           </div>
         </div>
 

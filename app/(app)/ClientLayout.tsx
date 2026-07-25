@@ -22,6 +22,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/categories",     label: "Categories",     icon: "label",            section: "Finance" },
   { href: "/budgets",        label: "Budgets",        icon: "savings",          section: "Finance" },
   { href: "/subscriptions",  label: "Subscriptions",  icon: "subscriptions",    section: "Finance" },
+  { href: "/bills",          label: "Bills",          icon: "request_quote",    section: "Finance" },
   { href: "/recurring",      label: "Recurring",      icon: "autorenew",        section: "Finance" },
   { href: "/goals",          label: "Goals",          icon: "flag",             section: "Finance" },
   { href: "/calendar",       label: "Calendar",       icon: "calendar_month",   section: "Tools" },
